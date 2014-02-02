@@ -25,8 +25,24 @@ public class MemoryTest {
         }
         // In UTF-8, decimal 84 refers to 'T'
         assertEquals(84, memory.getByte(0x200));
-        // In UTF-8, decimal 13 refers to CR, or carriage return
-        assertEquals(13, memory.getByte(0xffe));
+        // In UTF-8, decimal 104 refers to 'h'
+        assertEquals(104, memory.getByte(0x201));
+        // In UTF-8, decimal 105 refers to 'i'
+        assertEquals(105, memory.getByte(0x202));
+        // In UTF-8, decimal 115 refers to 's'
+        assertEquals(115, memory.getByte(0x203));
+        // In UTF-8, decimal 99 refers to 'c'
+        assertEquals(99, memory.getByte(0xff9));
+        // In UTF-8, decimal 104 refers to 'h'
+        assertEquals(104, memory.getByte(0xffa));
+        // In UTF-8, decimal 105 refers to 'i'
+        assertEquals(105, memory.getByte(0xffb));
+        // In UTF-8, decimal 112 refers to 'p'
+        assertEquals(112, memory.getByte(0xffc));
+        // In UTF-8, decimal 56 refers to '8'
+        assertEquals(56, memory.getByte(0xffd));
+        // In UTF-8, decimal 46 refers to '.'
+        assertEquals(46, memory.getByte(0xffe));
         // In UTF-8, decimal 10 refers to LF, or line ending 
         assertEquals(10, memory.getByte(0xfff));
     }
