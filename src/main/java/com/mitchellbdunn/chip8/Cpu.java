@@ -196,7 +196,7 @@ public class Cpu {
      * @param nnn address of start of subroutine.
      */
     private void opcode2NNN(int nnn) {
-        stack.push(programCounter);
+        stack.push(programCounter - 2);
         programCounter = nnn;
     }
 
@@ -488,4 +488,54 @@ public class Cpu {
     private void incrementProgramCounter() {
         programCounter = programCounter + 2;
     }
+
+    public int getRegisterV(int x) {
+        return registerV[x];
+    }
+
+    public void setRegisterV(int x, int value) {
+        this.registerV[x] = value;
+    }
+
+    public int getRegisterI() {
+        return registerI;
+    }
+
+    public void setRegisterI(int registerI) {
+        this.registerI = registerI;
+    }
+
+    public Stack<Integer> getStack() {
+        return stack;
+    }
+
+    public void setStack(Stack<Integer> stack) {
+        this.stack = stack;
+    }
+
+    public int getDelayTimer() {
+        return delayTimer;
+    }
+
+    public void setDelayTimer(int delayTimer) {
+        this.delayTimer = delayTimer;
+    }
+
+    public int getSoundTimer() {
+        return soundTimer;
+    }
+
+    public void setSoundTimer(int soundTimer) {
+        this.soundTimer = soundTimer;
+    }
+
+    public int getProgramCounter() {
+        return programCounter;
+    }
+
+    public void setProgramCounter(int programCounter) {
+        this.programCounter = programCounter;
+    }
+    
+    
 }
