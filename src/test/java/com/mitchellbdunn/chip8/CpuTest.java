@@ -138,17 +138,53 @@ public class CpuTest {
     
     @Test
     public void testOpcode8XY1() {
-        
+        cpu = new Cpu();
+        cpu.setRegisterV(0x1, 0x00);
+        cpu.setRegisterV(0x2, 0xFF);
+        cpu.setRegisterV(0x3, 0x59);
+        cpu.setRegisterV(0x4, 0x3A);
+        cpu.setRegisterV(0x5, 0xB4);
+        cpu.setRegisterV(0x6, 0x3C);
+        cpu.runOpcode(0x8121);
+        cpu.runOpcode(0x8341);
+        cpu.runOpcode(0x8561);
+        assertEquals(0xFF, cpu.getRegisterV(0x1));
+        assertEquals(0x7B, cpu.getRegisterV(0x3));
+        assertEquals(0xBC, cpu.getRegisterV(0x5));
     }
     
     @Test
     public void testOpcode8XY2() {
-        
+        cpu = new Cpu();
+        cpu.setRegisterV(0x1, 0x00);
+        cpu.setRegisterV(0x2, 0xFF);
+        cpu.setRegisterV(0x3, 0x59);
+        cpu.setRegisterV(0x4, 0x3A);
+        cpu.setRegisterV(0x5, 0xB4);
+        cpu.setRegisterV(0x6, 0x3C);
+        cpu.runOpcode(0x8122);
+        cpu.runOpcode(0x8342);
+        cpu.runOpcode(0x8562);
+        assertEquals(0x00, cpu.getRegisterV(0x1));
+        assertEquals(0x18, cpu.getRegisterV(0x3));
+        assertEquals(0x34, cpu.getRegisterV(0x5));
     }
     
     @Test
     public void testOpcode8XY3() {
-        
+        cpu = new Cpu();
+        cpu.setRegisterV(0x1, 0x00);
+        cpu.setRegisterV(0x2, 0xFF);
+        cpu.setRegisterV(0x3, 0x59);
+        cpu.setRegisterV(0x4, 0x3A);
+        cpu.setRegisterV(0x5, 0xB4);
+        cpu.setRegisterV(0x6, 0x3C);
+        cpu.runOpcode(0x8123);
+        cpu.runOpcode(0x8343);
+        cpu.runOpcode(0x8563);
+        assertEquals(0xFF, cpu.getRegisterV(0x1));
+        assertEquals(0x63, cpu.getRegisterV(0x3));
+        assertEquals(0x88, cpu.getRegisterV(0x5));
     }
     
     @Test
@@ -192,11 +228,24 @@ public class CpuTest {
     
     @Test
     public void testOpcodeANNN() {
-        
+        cpu = new Cpu();
+        cpu.runOpcode(0xA2E2);
+        assertEquals(0x2E2, cpu.getRegisterI());
+        cpu.runOpcode(0xA735);
+        assertEquals(0x735, cpu.getRegisterI());
+        cpu.runOpcode(0xAF0D);
+        assertEquals(0xF0D, cpu.getRegisterI());
     }
     
     @Test
     public void testOpcodeBNNN() {
+        cpu = new Cpu();
+        cpu.setRegisterV(0x0, 0x1F);
+        cpu.runOpcode(0xB934);
+        assertEquals(0x953, cpu.getProgramCounter());
+        cpu.setRegisterV(0x0, 0xA4);
+        cpu.runOpcode(0xB3F5);
+        assertEquals(0x499, cpu.getProgramCounter());
         
     }
     
@@ -260,7 +309,14 @@ public class CpuTest {
     
     @Test
     public void testOpcodeFX1E() {
-        
+        cpu = new Cpu();
+        cpu.setRegisterV(0x8, 0x3F);
+        cpu.setRegisterV(0xD, 0xA5);
+        cpu.setRegisterI(0x01);
+        cpu.runOpcode(0xF81E);
+        assertEquals(0x40, cpu.getRegisterI());
+        cpu.runOpcode(0xFD1E);
+        assertEquals(0xE5, cpu.getRegisterI());
     }
     
     @Test

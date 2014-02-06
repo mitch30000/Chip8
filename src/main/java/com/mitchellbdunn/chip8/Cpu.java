@@ -15,7 +15,7 @@ public class Cpu {
     private int delayTimer;
     private int soundTimer;
     private int programCounter;
-    private Random rng;
+    private final Random rng;
 
     public Cpu() {
         initializeCpu();
