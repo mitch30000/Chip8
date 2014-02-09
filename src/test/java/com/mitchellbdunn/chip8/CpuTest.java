@@ -1,6 +1,7 @@
 
 package com.mitchellbdunn.chip8;
 
+import java.awt.event.KeyEvent;
 import java.util.Stack;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -261,12 +262,30 @@ public class CpuTest {
     
     @Test
     public void testOpcodeEX9E() {
-        
+        cpu = new Cpu();
+        Keyboard keyboard = new Keyboard();
+        cpu.setKeyboard(keyboard);
+        cpu.setProgramCounter(0x200);
+        cpu.setRegisterV(0x3, 0x1);
+        cpu.runOpcode(0xE39E);
+        assertEquals(0x202, cpu.getProgramCounter());
+        keyboard.keyPress(KeyEvent.VK_1);
+        cpu.runOpcode(0xE39E);
+        assertEquals(0x206, cpu.getProgramCounter());
     }
     
     @Test
     public void testOpcodeEXA1() {
-        
+        cpu = new Cpu();
+        Keyboard keyboard = new Keyboard();
+        cpu.setKeyboard(keyboard);
+        cpu.setProgramCounter(0x200);
+        cpu.setRegisterV(0xE, 0x3);
+        cpu.runOpcode(0xEEA1);
+        assertEquals(0x204, cpu.getProgramCounter());
+        keyboard.keyPress(KeyEvent.VK_3);
+        cpu.runOpcode(0xEEA1);
+        assertEquals(0x206, cpu.getProgramCounter());
     }
     
     @Test
@@ -282,7 +301,7 @@ public class CpuTest {
     
     @Test
     public void testOpcodeFX0A() {
-        
+        // TODO: Figure out how to test this
     }
     
     @Test

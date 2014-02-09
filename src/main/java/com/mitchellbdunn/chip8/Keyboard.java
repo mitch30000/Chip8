@@ -21,6 +21,8 @@ public class Keyboard implements KeyListener {
      */
     private final Map<Integer, Integer> keyMap;
     private final boolean[] keyState;
+    private boolean waitingForKeyPress;
+    private int keyPressed;
     
     public Keyboard() {
         keyMap = new HashMap<Integer, Integer>();
@@ -41,6 +43,14 @@ public class Keyboard implements KeyListener {
         keyMap.put(KeyEvent.VK_C, 0xB);
         keyMap.put(KeyEvent.VK_V, 0xF);
         keyState = new boolean[16];
+        waitingForKeyPress = false;
+    }
+    
+    public int waitForKeyPress() {
+        waitingForKeyPress = true;
+        while(waitingForKeyPress) {
+        }
+        return keyPressed;
     }
     
     @Override
@@ -62,11 +72,19 @@ public class Keyboard implements KeyListener {
         if(keyMap.containsKey(keyCode)) {
             keyState[keyMap.get(keyCode)] = true;
         }
+        if(waitingForKeyPress) {
+            keyPressed = keyMap.get(keyCode);
+            waitingForKeyPress = false;
+        }
     }
     
     public void keyRelease(int keyCode) {
         if(keyMap.containsKey(keyCode)) {
             keyState[keyMap.get(keyCode)] = false;
+        }
+        if(waitingForKeyPress) {
+            keyPressed = keyMap.get(keyCode);
+            waitingForKeyPress = false;
         }
     }
     

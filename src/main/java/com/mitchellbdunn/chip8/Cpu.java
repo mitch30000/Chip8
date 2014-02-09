@@ -9,6 +9,10 @@ import java.util.Stack;
  */
 public class Cpu {
 
+    // Chip8 units
+    private Keyboard keyboard;
+    
+    // Cpu variables
     private int[] registerV;
     private int registerI;
     private Stack<Integer> stack;
@@ -395,7 +399,9 @@ public class Cpu {
      * @param x register that holds a value that will map to a key
      */
     private void opcodeEX9E(int x) {
-
+        if(keyboard.isKeyPressed(registerV[x])) {
+            incrementProgramCounter();
+        }
     }
 
     /**
@@ -403,7 +409,9 @@ public class Cpu {
      * @param x register that holds a value that will map to a key
      */
     private void opcodeEXA1(int x) {
-
+        if(!keyboard.isKeyPressed(registerV[x])) {
+            incrementProgramCounter();
+        }
     }
 
     /**
@@ -419,7 +427,7 @@ public class Cpu {
      * @param x register to store which key is pressed.
      */
     private void opcodeFX0A(int x) {
-
+        registerV[x] = keyboard.waitForKeyPress();
     }
 
     /**
@@ -537,5 +545,11 @@ public class Cpu {
         this.programCounter = programCounter;
     }
     
+    public Keyboard getKeyboard() {
+        return keyboard;
+    }
     
+    public void setKeyboard(Keyboard keyboard) {
+        this.keyboard = keyboard;
+    }
 }
