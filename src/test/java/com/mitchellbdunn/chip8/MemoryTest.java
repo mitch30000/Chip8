@@ -20,9 +20,6 @@ public class MemoryTest {
     public void testLoadRom() throws Exception {
         Memory memory = new Memory();
         memory.loadRom(TEST_RESOURCES + "testRom");
-        for (int i = 0; i < 0x200; i++) {
-            assertEquals(0, memory.getByte(i));
-        }
         // In UTF-8, decimal 84 refers to 'T'
         assertEquals(84, memory.getByte(0x200));
         // In UTF-8, decimal 104 refers to 'h'
