@@ -7,9 +7,13 @@ package com.mitchellbdunn.chip8;
  */
 public class Screen {
     
-    private final boolean[][] screen;
+    private boolean[][] screen;
     
     public Screen() {
+        initializeScreen();
+    }
+    
+    public final void initializeScreen() {
         screen = new boolean[32][64];
     }
     

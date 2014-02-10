@@ -14,17 +14,22 @@ public class Keyboard implements KeyListener {
 
     /**
      * Default key positioning is as follows:
-     * 1, 2, 3, C
-     * 4, 5, 6, D
-     * 7, 8, 9, E
-     * A, 0, B, F
+     * Keyboard         Chip8
+     * 1, 2, 3, 4       1, 2, 3, C
+     * Q, W, E, R  -->  4, 5, 6, D
+     * A, S, D, F       7, 8, 9, E
+     * Z, X, C, V       A, 0, B, F
      */
-    private final Map<Integer, Integer> keyMap;
-    private final boolean[] keyState;
+    private Map<Integer, Integer> keyMap;
+    private boolean[] keyState;
     private boolean waitingForKeyPress;
     private int keyPressed;
     
     public Keyboard() {
+        initializeKeyboard();
+    }
+    
+    public final void initializeKeyboard() {
         keyMap = new HashMap<Integer, Integer>();
         keyMap.put(KeyEvent.VK_1, 0x1);
         keyMap.put(KeyEvent.VK_2, 0x2);
