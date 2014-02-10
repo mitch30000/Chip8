@@ -77,6 +77,10 @@ public class Memory {
         return memory;
     }
 
+    public void setByte(int index, byte value) {
+        memory[index] = value;
+    }
+    
     public byte getByte(int index) {
         return memory[index];
     }

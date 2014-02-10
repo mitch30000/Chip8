@@ -524,7 +524,10 @@ public class Cpu {
      * representation.
      */
     private void opcodeFX33(int x) {
-
+        int number = registerV[x];
+        memory.setByte(registerI, (byte) (number / 100));
+        memory.setByte(registerI + 1, (byte) ((number % 100) / 10));
+        memory.setByte(registerI + 2, (byte) (number & 10));
     }
 
     /**
@@ -533,7 +536,9 @@ public class Cpu {
      * @param x last register to store in memory.
      */
     private void opcodeFX55(int x) {
-
+        for (int i = 0x0; i <= x; i++) {
+            memory.setByte(registerI + x, (byte) registerV[x]);
+        }
     }
 
     /**
@@ -542,7 +547,9 @@ public class Cpu {
      * @param x last register to store from memory.
      */
     private void opcodeFX65(int x) {
-
+        for (int i = 0x0; i <= x; i++) {
+            registerV[x] = memory.getByte(registerI + x);
+        }
     }
 
     private void incrementProgramCounter() {
