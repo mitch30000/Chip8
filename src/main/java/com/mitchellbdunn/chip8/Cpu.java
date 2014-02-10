@@ -11,7 +11,9 @@ public class Cpu {
 
     // Chip8 units
     private Keyboard keyboard;
-    
+    private Screen screen;
+    private Memory memory;
+
     // Cpu variables
     private int[] registerV;
     private int registerI;
@@ -45,11 +47,11 @@ public class Cpu {
         int n = Chip8Util.getN(opcode);
         int x = Chip8Util.getX(opcode);
         int y = Chip8Util.getY(opcode);
-        
+
         // Increase the program counter; there are some opcodes where
         // this won't matter since we set the program counter there
         incrementProgramCounter();
-        
+
         // Run the appropriate opcode
         switch (opcode & 0xF000) {
             case 0x0000:
@@ -177,7 +179,7 @@ public class Cpu {
      * Clears the screen.
      */
     private void opcode00E0() {
-
+        screen.initializeScreen();
     }
 
     /**
@@ -189,6 +191,7 @@ public class Cpu {
 
     /**
      * Jumps to address NNN.
+     *
      * @param nnn address to set program counter to.
      */
     private void opcode1NNN(int nnn) {
@@ -197,6 +200,7 @@ public class Cpu {
 
     /**
      * Calls subroutine at NNN.
+     *
      * @param nnn address of start of subroutine.
      */
     private void opcode2NNN(int nnn) {
@@ -206,6 +210,7 @@ public class Cpu {
 
     /**
      * Skips the next instruction if VX equals NN.
+     *
      * @param x register to check for equality.
      * @param nn value to check if equal to register VX.
      */
@@ -217,6 +222,7 @@ public class Cpu {
 
     /**
      * Skips the next instruction if VX doesn't equal NN.
+     *
      * @param x register to check for equality.
      * @param nn value to check if not equal to register VX.
      */
@@ -228,6 +234,7 @@ public class Cpu {
 
     /**
      * Skips the next instruction if VX equals VY.
+     *
      * @param x register to check for equality.
      * @param y register to check for equality.
      */
@@ -239,6 +246,7 @@ public class Cpu {
 
     /**
      * Sets VX to NN.
+     *
      * @param x register to set value.
      * @param nn value to set for register VX.
      */
@@ -248,6 +256,7 @@ public class Cpu {
 
     /**
      * Adds NN to VX.
+     *
      * @param x register to add value to.
      * @param nn value to add to register VX.
      */
@@ -257,6 +266,7 @@ public class Cpu {
 
     /**
      * Sets VX to the value of VY.
+     *
      * @param x register to set value.
      * @param y register to get the value to set in register VX.
      */
@@ -266,6 +276,7 @@ public class Cpu {
 
     /**
      * Sets VX to VX or VY.
+     *
      * @param x register to set value.
      * @param y register to perform bitwise OR with register VX.
      */
@@ -275,6 +286,7 @@ public class Cpu {
 
     /**
      * Sets VX to VX and VY.
+     *
      * @param x register to set value.
      * @param y register to perform bitwise AND with register VX.
      */
@@ -284,6 +296,7 @@ public class Cpu {
 
     /**
      * Sets VX to VX xor VY.
+     *
      * @param x register to set value.
      * @param y register to perform bitwise XOR with register VX.
      */
@@ -292,8 +305,9 @@ public class Cpu {
     }
 
     /**
-     * Adds VY to VX.  VF is set to 1 when there's a carry, and to 0 when
-     * there isn't.
+     * Adds VY to VX. VF is set to 1 when there's a carry, and to 0 when there
+     * isn't.
+     *
      * @param x register to add value to.
      * @param y register to get value and to add to register VX.
      */
@@ -302,8 +316,9 @@ public class Cpu {
     }
 
     /**
-     * VY is subtracted from VX.  VF is set to 0 when there's a borrow, and
-     * 1 when there isn't.
+     * VY is subtracted from VX. VF is set to 0 when there's a borrow, and 1
+     * when there isn't.
+     *
      * @param x register to subtract value from.
      * @param y register to get value to subtract from register VX.
      */
@@ -312,8 +327,9 @@ public class Cpu {
     }
 
     /**
-     * Shifts VX right by one.  VF is set to the value of the least significant
+     * Shifts VX right by one. VF is set to the value of the least significant
      * bit of VX before the shift.
+     *
      * @param x register to shift bits right by one.
      * @param y not used.
      */
@@ -322,8 +338,9 @@ public class Cpu {
     }
 
     /**
-     * Sets VX to VY minus VX.  VF is set to 0 when there's a borrow, and 1 when
+     * Sets VX to VY minus VX. VF is set to 0 when there's a borrow, and 1 when
      * there isn't.
+     *
      * @param x register to set value of subtraction to as well as get value of
      * subtrahend.
      * @param y register to get value of minuend for subtraction.
@@ -333,8 +350,9 @@ public class Cpu {
     }
 
     /**
-     * Shifts VX left by one.  VF is set to the value of the most significant
-     * bit of VX before the shift.
+     * Shifts VX left by one. VF is set to the value of the most significant bit
+     * of VX before the shift.
+     *
      * @param x register to shift bits left by one.
      * @param y not used.
      */
@@ -344,6 +362,7 @@ public class Cpu {
 
     /**
      * Skips the next instruction if VX doesn't equal VY.
+     *
      * @param x register to check for equality.
      * @param y register to check for equality.
      */
@@ -355,6 +374,7 @@ public class Cpu {
 
     /**
      * Sets I to the address NNN.
+     *
      * @param nnn value to set for I.
      */
     private void opcodeANNN(int nnn) {
@@ -363,6 +383,7 @@ public class Cpu {
 
     /**
      * Jumps to the address NNN plus V0.
+     *
      * @param nnn value to jump to plus value of register V0.
      */
     private void opcodeBNNN(int nnn) {
@@ -371,6 +392,7 @@ public class Cpu {
 
     /**
      * Sets VX to a random number and NN.
+     *
      * @param x register to set value.
      * @param nn value to get bitwise AND with a random number for register VX.
      */
@@ -380,42 +402,64 @@ public class Cpu {
 
     /**
      * Draws a sprite at coordinate (VX, VY) that has a width of 8 pixels and a
-     * height of N pixels.  Each row of 8 pixels is read as bit-coded (with the
+     * height of N pixels. Each row of 8 pixels is read as bit-coded (with the
      * most significant bit of each byte displayed on the left) starting from
      * memory location I; I value doesn't change after the execution of this
-     * instruction.  As described above, VF is set to 1 if any screen pixels are
+     * instruction. As described above, VF is set to 1 if any screen pixels are
      * flipped from set to unset when the sprite is drawn, and to 0 if that
      * doesn't happen.
+     *
      * @param x register that holds X location to draw sprite.
      * @param y register that holds Y location to draw sprite.
      * @param n height of the sprite
      */
     private void opcodeDXYN(int x, int y, int n) {
-
+        // Reset register VF
+        registerV[0xF] = 0x0;
+        for (int i = 0; i < n; i++) {
+            byte row = memory.getByte(registerI + i);
+            // Loop through each bit to know how to draw it to
+            // the screen
+            for (int j = 0; j < 8; j++) {
+                // Boolean representing if the bit was set or not
+                boolean drawPixel = (((row >> j) & 1) == 1);
+                if (drawPixel) {
+                    // Draw the pixel, and get a boolean representing
+                    // if we should set register VF or not
+                    boolean setVF = screen.drawPixel(x + j, y + i);
+                    if (setVF) {
+                        registerV[0xF] = 0x1;
+                    }
+                }
+            }
+        }
     }
 
     /**
      * Skips the next instruction if the key stored in VX is pressed.
+     *
      * @param x register that holds a value that will map to a key
      */
     private void opcodeEX9E(int x) {
-        if(keyboard.isKeyPressed(registerV[x])) {
+        if (keyboard.isKeyPressed(registerV[x])) {
             incrementProgramCounter();
         }
     }
 
     /**
      * Skips the next instruction if the key stored in VX isn't pressed.
+     *
      * @param x register that holds a value that will map to a key
      */
     private void opcodeEXA1(int x) {
-        if(!keyboard.isKeyPressed(registerV[x])) {
+        if (!keyboard.isKeyPressed(registerV[x])) {
             incrementProgramCounter();
         }
     }
 
     /**
      * Sets VX to the value of the delay timer.
+     *
      * @param x register to set to value of delay timer.
      */
     private void opcodeFX07(int x) {
@@ -424,6 +468,7 @@ public class Cpu {
 
     /**
      * A key press is awaited, and then stored in VX.
+     *
      * @param x register to store which key is pressed.
      */
     private void opcodeFX0A(int x) {
@@ -432,6 +477,7 @@ public class Cpu {
 
     /**
      * Sets the delay timer to VX.
+     *
      * @param x register to set with the value of the delay timer.
      */
     private void opcodeFX15(int x) {
@@ -440,6 +486,7 @@ public class Cpu {
 
     /**
      * Sets the sound timer to VX.
+     *
      * @param x register to set with the value of the sound timer.
      */
     private void opcodeFX18(int x) {
@@ -448,6 +495,7 @@ public class Cpu {
 
     /**
      * Adds VX to I.
+     *
      * @param x register to add to I.
      */
     private void opcodeFX1E(int x) {
@@ -455,21 +503,23 @@ public class Cpu {
     }
 
     /**
-     * Sets I to the location of the sprite for the character in VX. Characters 
+     * Sets I to the location of the sprite for the character in VX. Characters
      * 0-F (in hexadecimal) are represented by a 4x5 font.
+     *
      * @param x register to get value of the sprite for the character.
      */
     private void opcodeFX29(int x) {
-
+        registerI = x * 5;
     }
 
     /**
-     * Stores the Binary-coded decimal representation of VX, with the most 
-     * significant of three digits at the address in I, the middle digit at I 
-     * plus 1, and the least significant digit at I plus 2. (In other words, 
-     * take the decimal representation of VX, place the hundreds digit in memory 
-     * at location in I, the tens digit at location I+1, and the ones digit at 
+     * Stores the Binary-coded decimal representation of VX, with the most
+     * significant of three digits at the address in I, the middle digit at I
+     * plus 1, and the least significant digit at I plus 2. (In other words,
+     * take the decimal representation of VX, place the hundreds digit in memory
+     * at location in I, the tens digit at location I+1, and the ones digit at
      * location I+2.)
+     *
      * @param x register to get decimal value and store the binary-coded
      * representation.
      */
@@ -479,6 +529,7 @@ public class Cpu {
 
     /**
      * Stores V0 to VX in memory starting at address I.
+     *
      * @param x last register to store in memory.
      */
     private void opcodeFX55(int x) {
@@ -487,6 +538,7 @@ public class Cpu {
 
     /**
      * Fills V0 to VX with values from memory starting at address I.
+     *
      * @param x last register to store from memory.
      */
     private void opcodeFX65(int x) {
@@ -544,12 +596,28 @@ public class Cpu {
     public void setProgramCounter(int programCounter) {
         this.programCounter = programCounter;
     }
-    
+
     public Keyboard getKeyboard() {
         return keyboard;
     }
-    
+
     public void setKeyboard(Keyboard keyboard) {
         this.keyboard = keyboard;
+    }
+
+    public Screen getScreen() {
+        return screen;
+    }
+
+    public void setScreen(Screen screen) {
+        this.screen = screen;
+    }
+
+    public Memory getMemory() {
+        return memory;
+    }
+
+    public void setMemory(Memory memory) {
+        this.memory = memory;
     }
 }
