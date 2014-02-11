@@ -200,7 +200,15 @@ public class CpuTest {
     
     @Test
     public void testOpcode8XY6() {
-        
+        cpu = new Cpu();
+        cpu.setRegisterV(0x5, 0xA5);
+        cpu.setRegisterV(0x0, 0x6C);
+        cpu.runOpcode(0x8576);
+        assertEquals(0x1, cpu.getRegisterV(0xF));
+        assertEquals(0x52, cpu.getRegisterV(0x5));
+        cpu.runOpcode(0x80F6);
+        assertEquals(0x0, cpu.getRegisterV(0xF));
+        assertEquals(0x36, cpu.getRegisterV(0x0));
     }
     
     @Test
@@ -210,7 +218,15 @@ public class CpuTest {
     
     @Test
     public void testOpcode8XYE() {
-        
+        cpu = new Cpu();
+        cpu.setRegisterV(0x2, 0x7D);
+        cpu.setRegisterV(0xD, 0xE3);
+        cpu.runOpcode(0x820E);
+        assertEquals(0x0, cpu.getRegisterV(0xF));
+        assertEquals(0xFA, cpu.getRegisterV(0x2));
+        cpu.runOpcode(0x8DBE);
+        assertEquals(0x1, cpu.getRegisterV(0xF));
+        assertEquals(0xC6, cpu.getRegisterV(0xD));
     }
     
     @Test

@@ -334,7 +334,8 @@ public class Cpu {
      * @param y not used.
      */
     private void opcode8XY6(int x, int y) {
-
+        registerV[0xF] = Chip8Util.getBit(registerV[x], 0) ? 1 : 0;
+        registerV[x] >>>= 1;
     }
 
     /**
@@ -357,7 +358,9 @@ public class Cpu {
      * @param y not used.
      */
     private void opcode8XYE(int x, int y) {
-
+        registerV[0xF] = Chip8Util.getBit(registerV[x], 7) ? 1 : 0;
+        registerV[x] <<= 1;
+        registerV[x] &= 0xFF;
     }
 
     /**
@@ -422,7 +425,7 @@ public class Cpu {
             // the screen
             for (int j = 0; j < 8; j++) {
                 // Boolean representing if the bit was set or not
-                boolean drawPixel = (((row >> j) & 1) == 1);
+                boolean drawPixel = Chip8Util.getBit(row, j);
                 if (drawPixel) {
                     // Draw the pixel, and get a boolean representing
                     // if we should set register VF or not

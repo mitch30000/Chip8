@@ -27,5 +27,9 @@ public final class Chip8Util {
         return (opcode & 0x00F0) >> 4;
     }
     
+    public static boolean getBit(int number, int position) {
+        return (((number >> position) & 1) == 1);
+    }
+    
     private Chip8Util() {}
 }

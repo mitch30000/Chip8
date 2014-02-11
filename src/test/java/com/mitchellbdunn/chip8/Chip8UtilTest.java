@@ -2,6 +2,8 @@
 package com.mitchellbdunn.chip8;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
@@ -78,5 +80,18 @@ public class Chip8UtilTest {
         assertEquals(0xD, Chip8Util.getY(0X3ED0));
         assertEquals(0x7, Chip8Util.getY(0X9876));
         assertEquals(0x6, Chip8Util.getY(0X4567));
+    }
+    
+    @Test
+    public void testGetBit() {
+        // 0xB3 = 10110011
+        assertTrue(Chip8Util.getBit(0xB3, 0));
+        assertTrue(Chip8Util.getBit(0xB3, 1));
+        assertFalse(Chip8Util.getBit(0xB3, 2));
+        assertFalse(Chip8Util.getBit(0xB3, 3));
+        assertTrue(Chip8Util.getBit(0xB3, 4));
+        assertTrue(Chip8Util.getBit(0xB3, 5));
+        assertFalse(Chip8Util.getBit(0xB3, 6));
+        assertTrue(Chip8Util.getBit(0xB3, 7));
     }
 }
