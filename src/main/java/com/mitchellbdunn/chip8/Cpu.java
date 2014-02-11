@@ -312,7 +312,9 @@ public class Cpu {
      * @param y register to get value and to add to register VX.
      */
     private void opcode8XY4(int x, int y) {
-
+        registerV[x] += registerV[y];
+        registerV[0xF] = Chip8Util.getBit(registerV[x], 8)?1:0;
+        registerV[x] &= 0xFF;
     }
 
     /**
@@ -323,7 +325,9 @@ public class Cpu {
      * @param y register to get value to subtract from register VX.
      */
     private void opcode8XY5(int x, int y) {
-
+        registerV[0xF] = (registerV[x] > registerV[y])?1:0;
+        registerV[x] -= registerV[y];
+        registerV[x] &= 0xFF;
     }
 
     /**
@@ -347,7 +351,9 @@ public class Cpu {
      * @param y register to get value of minuend for subtraction.
      */
     private void opcode8XY7(int x, int y) {
-
+        registerV[0xF] = (registerV[x] < registerV[y])?1:0;
+        registerV[x] = registerV[y] - registerV[x];
+        registerV[x] &= 0xFF;
     }
 
     /**
