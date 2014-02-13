@@ -447,11 +447,11 @@ public class Cpu {
                     int drawY = registerV[y] + i;
                     // If a pixel will be drawn off the screen it
                     // instead wraps around the screen
-                    if(drawX >= 64) {
-                        drawX -= 64;
+                    if(drawX >= Chip8.SCREEN_WIDTH) {
+                        drawX -= Chip8.SCREEN_WIDTH;
                     }
-                    if(drawY >= 32) {
-                        drawY -= 32;
+                    if(drawY >= Chip8.SCREEN_HEIGHT) {
+                        drawY -= Chip8.SCREEN_HEIGHT;
                     }
                     // Draw the pixel, and get a boolean representing
                     // if we should set register VF or not.  Pixels
@@ -463,6 +463,7 @@ public class Cpu {
                 }
             }
         }
+        screen.repaint();
     }
 
     /**
