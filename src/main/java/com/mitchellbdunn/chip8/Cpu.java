@@ -458,10 +458,10 @@ public class Cpu {
                     int drawY = registerV[y] + i;
                     // If a pixel will be drawn off the screen it
                     // instead wraps around the screen
-                    if(drawX >= Chip8.SCREEN_WIDTH) {
+                    while(drawX >= Chip8.SCREEN_WIDTH) {
                         drawX -= Chip8.SCREEN_WIDTH;
                     }
-                    if(drawY >= Chip8.SCREEN_HEIGHT) {
+                    while(drawY >= Chip8.SCREEN_HEIGHT) {
                         drawY -= Chip8.SCREEN_HEIGHT;
                     }
                     // Draw the pixel, and get a boolean representing
