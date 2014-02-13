@@ -325,9 +325,13 @@ public class Cpu {
      * @param y register to get value to subtract from register VX.
      */
     private void opcode8XY5(int x, int y) {
-        registerV[0xF] = (registerV[x] > registerV[y])?1:0;
-        registerV[x] -= registerV[y];
-        registerV[x] &= 0xFF;
+        if(registerV[x] >= registerV[y]) {
+            registerV[0xF] = 1;
+            registerV[x] -= registerV[y];
+        } else {
+            registerV[0xF] = 0;
+            registerV[x] = (int)(0xFF + (registerV[x] - registerV[y] + 1));
+        }
     }
 
     /**
@@ -351,9 +355,13 @@ public class Cpu {
      * @param y register to get value of minuend for subtraction.
      */
     private void opcode8XY7(int x, int y) {
-        registerV[0xF] = (registerV[x] < registerV[y])?1:0;
-        registerV[x] = registerV[y] - registerV[x];
-        registerV[x] &= 0xFF;
+        if(registerV[y] >= registerV[x]) {
+            registerV[0xF] = 1;
+            registerV[x] = registerV[y] - registerV[x];
+        } else {
+            registerV[0xF] = 0;
+            registerV[x] = (int)(0xFF + (registerV[y] - registerV[x] + 1));
+        }
     }
 
     /**
@@ -425,17 +433,30 @@ public class Cpu {
     private void opcodeDXYN(int x, int y, int n) {
         // Reset register VF
         registerV[0xF] = 0x0;
+        // Loop through each row (represents Y coordinate)
         for (int i = 0; i < n; i++) {
             byte row = memory.getByte(registerI + i);
             // Loop through each bit to know how to draw it to
-            // the screen
+            // the screen (represents X coordinate)
             for (int j = 0; j < 8; j++) {
                 // Boolean representing if the bit was set or not
                 boolean drawPixel = Chip8Util.getBit(row, j);
                 if (drawPixel) {
+                    // Get the coordinates to draw to
+                    int drawX = registerV[x] + j;
+                    int drawY = registerV[y] + i;
+                    // If a pixel will be drawn off the screen it
+                    // instead wraps around the screen
+                    if(drawX >= 64) {
+                        drawX -= 64;
+                    }
+                    if(drawY >= 32) {
+                        drawY -= 32;
+                    }
                     // Draw the pixel, and get a boolean representing
-                    // if we should set register VF or not
-                    boolean setVF = screen.drawPixel(x + j, y + i);
+                    // if we should set register VF or not.  Pixels
+                    // are XOR into the existing screen.
+                    boolean setVF = screen.drawPixel(drawX, drawY);
                     if (setVF) {
                         registerV[0xF] = 0x1;
                     }
@@ -536,7 +557,7 @@ public class Cpu {
         int number = registerV[x];
         memory.setByte(registerI, (byte) (number / 100));
         memory.setByte(registerI + 1, (byte) ((number % 100) / 10));
-        memory.setByte(registerI + 2, (byte) (number & 10));
+        memory.setByte(registerI + 2, (byte) (number % 10));
     }
 
     /**
@@ -546,7 +567,7 @@ public class Cpu {
      */
     private void opcodeFX55(int x) {
         for (int i = 0x0; i <= x; i++) {
-            memory.setByte(registerI + x, (byte) registerV[x]);
+            memory.setByte(registerI + i, (byte) registerV[i]);
         }
     }
 
@@ -557,7 +578,7 @@ public class Cpu {
      */
     private void opcodeFX65(int x) {
         for (int i = 0x0; i <= x; i++) {
-            registerV[x] = memory.getByte(registerI + x);
+            registerV[i] = memory.getByte(registerI + i);
         }
     }
 

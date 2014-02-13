@@ -4,6 +4,8 @@ package com.mitchellbdunn.chip8;
 import java.awt.event.KeyEvent;
 import java.util.Stack;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
@@ -16,6 +18,30 @@ public class CpuTest {
     
     @Test
     public void testOpcode00E0() {
+        cpu = new Cpu();
+        Screen screen = new Screen();
+        cpu.setScreen(screen);
+        for(int i=0;i<32;i++) {
+            for(int j=0;j<64;j++) {
+                assertFalse(screen.isPixelSet(j, i));
+            }
+        }
+        for(int i=0;i<32;i++) {
+            for(int j=0;j<64;j++) {
+                screen.setPixel(j, i, true);
+            }
+        }
+        for(int i=0;i<32;i++) {
+            for(int j=0;j<64;j++) {
+                assertTrue(screen.isPixelSet(j, i));
+            }
+        }
+        cpu.runOpcode(0x00E0);
+        for(int i=0;i<32;i++) {
+            for(int j=0;j<64;j++) {
+                assertFalse(screen.isPixelSet(j, i));
+            }
+        }
         
     }
     
@@ -190,12 +216,37 @@ public class CpuTest {
     
     @Test
     public void testOpcode8XY4() {
-        
+        cpu = new Cpu();
+        cpu.setRegisterV(0xA, 0x4D);
+        cpu.setRegisterV(0xB, 0x99);
+        cpu.setRegisterV(0xC, 0xFF);
+        cpu.setRegisterV(0xD, 0x03);
+        cpu.runOpcode(0x8AB4);
+        assertEquals(0x0, cpu.getRegisterV(0xF));
+        assertEquals(0xE6, cpu.getRegisterV(0xA));
+        cpu.runOpcode(0x8CD4);
+        assertEquals(0x1, cpu.getRegisterV(0xF));
+        assertEquals(0x2, cpu.getRegisterV(0xC));
     }
     
     @Test
     public void testOpcode8XY5() {
-        
+        cpu = new Cpu();
+        cpu.setRegisterV(0xA, 0x4D);
+        cpu.setRegisterV(0xB, 0x99);
+        cpu.setRegisterV(0xC, 0xFF);
+        cpu.setRegisterV(0xD, 0x03);
+        cpu.setRegisterV(0xE, 0x22);
+        cpu.setRegisterV(0x0, 0x22);
+        cpu.runOpcode(0x8AB5);
+        assertEquals(0x0, cpu.getRegisterV(0xF));
+        assertEquals(0xB4, cpu.getRegisterV(0xA));
+        cpu.runOpcode(0x8CD5);
+        assertEquals(0x1, cpu.getRegisterV(0xF));
+        assertEquals(0xFC, cpu.getRegisterV(0xC));
+        cpu.runOpcode(0x8E05);
+        assertEquals(0x1, cpu.getRegisterV(0xF));
+        assertEquals(0x00, cpu.getRegisterV(0xE));
     }
     
     @Test
@@ -213,7 +264,22 @@ public class CpuTest {
     
     @Test
     public void testOpcode8XY7() {
-        
+        cpu = new Cpu();
+        cpu.setRegisterV(0xA, 0x4D);
+        cpu.setRegisterV(0xB, 0x99);
+        cpu.setRegisterV(0xC, 0xFF);
+        cpu.setRegisterV(0xD, 0x03);
+        cpu.setRegisterV(0xE, 0x22);
+        cpu.setRegisterV(0x0, 0x22);
+        cpu.runOpcode(0x8AB7);
+        assertEquals(0x1, cpu.getRegisterV(0xF));
+        assertEquals(0x4C, cpu.getRegisterV(0xA));
+        cpu.runOpcode(0x8CD7);
+        assertEquals(0x0, cpu.getRegisterV(0xF));
+        assertEquals(0x04, cpu.getRegisterV(0xC));
+        cpu.runOpcode(0x8E07);
+        assertEquals(0x1, cpu.getRegisterV(0xF));
+        assertEquals(0x00, cpu.getRegisterV(0xE));
     }
     
     @Test
@@ -268,11 +334,138 @@ public class CpuTest {
     
     @Test
     public void testOpcodeCXNN() {
-        
+        cpu = new Cpu();
+        cpu.runOpcode(0xC400);
+        assertEquals(0x00, cpu.getRegisterV(0x4));
     }
     
     @Test
     public void testOpcodeDXYN() {
+        // Set up everything
+        cpu = new Cpu();
+        Screen screen = new Screen();
+        Memory memory = new Memory();
+        cpu.setScreen(screen);
+        cpu.setMemory(memory);
+        cpu.setRegisterV(0x0, 0);
+        cpu.setRegisterV(0x1, 1);
+        cpu.setRegisterV(0x2, 63);
+        cpu.setRegisterV(0x3, 31);
+        memory.setByte(0x200, (byte)0xFF);
+        memory.setByte(0x201, (byte)0xC3);
+        memory.setByte(0x202, (byte)0xFF);
+        cpu.setRegisterI(0x200);
+        // Test drawing one row
+        cpu.runOpcode(0xD001);
+        assertTrue(screen.isPixelSet(0, 0));
+        assertTrue(screen.isPixelSet(1, 0));
+        assertTrue(screen.isPixelSet(2, 0));
+        assertTrue(screen.isPixelSet(3, 0));
+        assertTrue(screen.isPixelSet(4, 0));
+        assertTrue(screen.isPixelSet(5, 0));
+        assertTrue(screen.isPixelSet(6, 0));
+        assertTrue(screen.isPixelSet(7, 0));
+        assertFalse(screen.isPixelSet(0, 1));
+        assertFalse(screen.isPixelSet(1, 1));
+        assertFalse(screen.isPixelSet(2, 1));
+        assertFalse(screen.isPixelSet(3, 1));
+        assertFalse(screen.isPixelSet(4, 1));
+        assertFalse(screen.isPixelSet(5, 1));
+        assertFalse(screen.isPixelSet(6, 1));
+        assertFalse(screen.isPixelSet(7, 1));
+        assertFalse(screen.isPixelSet(0, 2));
+        assertFalse(screen.isPixelSet(1, 2));
+        assertFalse(screen.isPixelSet(2, 2));
+        assertFalse(screen.isPixelSet(3, 2));
+        assertFalse(screen.isPixelSet(4, 2));
+        assertFalse(screen.isPixelSet(5, 2));
+        assertFalse(screen.isPixelSet(6, 2));
+        assertFalse(screen.isPixelSet(7, 2));
+        assertEquals(0x0, cpu.getRegisterV(0xF));
+        // Test drawing three rows and if register 0xF gets set
+        cpu.runOpcode(0xD003);
+        assertFalse(screen.isPixelSet(0, 0));
+        assertFalse(screen.isPixelSet(1, 0));
+        assertFalse(screen.isPixelSet(2, 0));
+        assertFalse(screen.isPixelSet(3, 0));
+        assertFalse(screen.isPixelSet(4, 0));
+        assertFalse(screen.isPixelSet(5, 0));
+        assertFalse(screen.isPixelSet(6, 0));
+        assertFalse(screen.isPixelSet(7, 0));
+        assertTrue(screen.isPixelSet(0, 1));
+        assertTrue(screen.isPixelSet(1, 1));
+        assertFalse(screen.isPixelSet(2, 1));
+        assertFalse(screen.isPixelSet(3, 1));
+        assertFalse(screen.isPixelSet(4, 1));
+        assertFalse(screen.isPixelSet(5, 1));
+        assertTrue(screen.isPixelSet(6, 1));
+        assertTrue(screen.isPixelSet(7, 1));
+        assertTrue(screen.isPixelSet(0, 2));
+        assertTrue(screen.isPixelSet(1, 2));
+        assertTrue(screen.isPixelSet(2, 2));
+        assertTrue(screen.isPixelSet(3, 2));
+        assertTrue(screen.isPixelSet(4, 2));
+        assertTrue(screen.isPixelSet(5, 2));
+        assertTrue(screen.isPixelSet(6, 2));
+        assertTrue(screen.isPixelSet(7, 2));
+        assertEquals(0x1, cpu.getRegisterV(0xF));
+        // Test drawing two rows that should turn everything back to off,
+        // and that register 0xF gets set
+        cpu.setRegisterI(0x201);
+        cpu.runOpcode(0xD012);
+        assertFalse(screen.isPixelSet(0, 0));
+        assertFalse(screen.isPixelSet(1, 0));
+        assertFalse(screen.isPixelSet(2, 0));
+        assertFalse(screen.isPixelSet(3, 0));
+        assertFalse(screen.isPixelSet(4, 0));
+        assertFalse(screen.isPixelSet(5, 0));
+        assertFalse(screen.isPixelSet(6, 0));
+        assertFalse(screen.isPixelSet(7, 0));
+        assertFalse(screen.isPixelSet(0, 1));
+        assertFalse(screen.isPixelSet(1, 1));
+        assertFalse(screen.isPixelSet(2, 1));
+        assertFalse(screen.isPixelSet(3, 1));
+        assertFalse(screen.isPixelSet(4, 1));
+        assertFalse(screen.isPixelSet(5, 1));
+        assertFalse(screen.isPixelSet(6, 1));
+        assertFalse(screen.isPixelSet(7, 1));
+        assertFalse(screen.isPixelSet(0, 2));
+        assertFalse(screen.isPixelSet(1, 2));
+        assertFalse(screen.isPixelSet(2, 2));
+        assertFalse(screen.isPixelSet(3, 2));
+        assertFalse(screen.isPixelSet(4, 2));
+        assertFalse(screen.isPixelSet(5, 2));
+        assertFalse(screen.isPixelSet(6, 2));
+        assertFalse(screen.isPixelSet(7, 2));
+        assertEquals(0x1, cpu.getRegisterV(0xF));
+        // Test drawing off the screen and that it wraps back around
+        cpu.setRegisterI(0x200);
+        cpu.runOpcode(0xD233);
+        assertTrue(screen.isPixelSet(63, 31));
+        assertTrue(screen.isPixelSet(0, 31));
+        assertTrue(screen.isPixelSet(1, 31));
+        assertTrue(screen.isPixelSet(2, 31));
+        assertTrue(screen.isPixelSet(3, 31));
+        assertTrue(screen.isPixelSet(4, 31));
+        assertTrue(screen.isPixelSet(5, 31));
+        assertTrue(screen.isPixelSet(6, 31));
+        assertTrue(screen.isPixelSet(63, 0));
+        assertTrue(screen.isPixelSet(0, 0));
+        assertFalse(screen.isPixelSet(1, 0));
+        assertFalse(screen.isPixelSet(2, 0));
+        assertFalse(screen.isPixelSet(3, 0));
+        assertFalse(screen.isPixelSet(4, 0));
+        assertTrue(screen.isPixelSet(5, 0));
+        assertTrue(screen.isPixelSet(6, 0));
+        assertTrue(screen.isPixelSet(63, 1));
+        assertTrue(screen.isPixelSet(0, 1));
+        assertTrue(screen.isPixelSet(1, 1));
+        assertTrue(screen.isPixelSet(2, 1));
+        assertTrue(screen.isPixelSet(3, 1));
+        assertTrue(screen.isPixelSet(4, 1));
+        assertTrue(screen.isPixelSet(5, 1));
+        assertTrue(screen.isPixelSet(6, 1));
+        assertEquals(0x0, cpu.getRegisterV(0xF));
         
     }
     
@@ -356,22 +549,109 @@ public class CpuTest {
     
     @Test
     public void testOpcodeFX29() {
+        cpu = new Cpu();
+        cpu.runOpcode(0xF029);
+        assertEquals(0, cpu.getRegisterI());
+        cpu.runOpcode(0xF129);
+        assertEquals(5, cpu.getRegisterI());
+        cpu.runOpcode(0xF229);
+        assertEquals(10, cpu.getRegisterI());
+        cpu.runOpcode(0xF329);
+        assertEquals(15, cpu.getRegisterI());
+        cpu.runOpcode(0xF429);
+        assertEquals(20, cpu.getRegisterI());
+        cpu.runOpcode(0xF529);
+        assertEquals(25, cpu.getRegisterI());
+        cpu.runOpcode(0xF629);
+        assertEquals(30, cpu.getRegisterI());
+        cpu.runOpcode(0xF729);
+        assertEquals(35, cpu.getRegisterI());
+        cpu.runOpcode(0xF829);
+        assertEquals(40, cpu.getRegisterI());
+        cpu.runOpcode(0xF929);
+        assertEquals(45, cpu.getRegisterI());
+        cpu.runOpcode(0xFA29);
+        assertEquals(50, cpu.getRegisterI());
+        cpu.runOpcode(0xFB29);
+        assertEquals(55, cpu.getRegisterI());
+        cpu.runOpcode(0xFC29);
+        assertEquals(60, cpu.getRegisterI());
+        cpu.runOpcode(0xFD29);
+        assertEquals(65, cpu.getRegisterI());
+        cpu.runOpcode(0xFE29);
+        assertEquals(70, cpu.getRegisterI());
+        cpu.runOpcode(0xFF29);
+        assertEquals(75, cpu.getRegisterI());
         
     }
     
     @Test
     public void testOpcodeFX33() {
-        
+        cpu = new Cpu();
+        Memory memory = new Memory();
+        cpu.setMemory(memory);
+        cpu.setRegisterI(0x3F2);
+        cpu.setRegisterV(0x5, 148);
+        cpu.runOpcode(0xF533);
+        assertEquals(1, memory.getByte(0x3F2));
+        assertEquals(4, memory.getByte(0x3F3));
+        assertEquals(8, memory.getByte(0x3F4));
     }
     
     @Test
     public void testOpcodeFX55() {
-        
+        cpu = new Cpu();
+        Memory memory = new Memory();
+        cpu.setMemory(memory);
+        for(int i=0x0;i<=0xF;i++) {
+            cpu.setRegisterV(i, i);
+        }
+        cpu.setRegisterI(0x346);
+        cpu.runOpcode(0xFF55);
+        assertEquals(0x0, memory.getByte(0x346));
+        assertEquals(0x1, memory.getByte(0x347));
+        assertEquals(0x2, memory.getByte(0x348));
+        assertEquals(0x3, memory.getByte(0x349));
+        assertEquals(0x4, memory.getByte(0x34A));
+        assertEquals(0x5, memory.getByte(0x34B));
+        assertEquals(0x6, memory.getByte(0x34C));
+        assertEquals(0x7, memory.getByte(0x34D));
+        assertEquals(0x8, memory.getByte(0x34E));
+        assertEquals(0x9, memory.getByte(0x34F));
+        assertEquals(0xA, memory.getByte(0x350));
+        assertEquals(0xB, memory.getByte(0x351));
+        assertEquals(0xC, memory.getByte(0x352));
+        assertEquals(0xD, memory.getByte(0x353));
+        assertEquals(0xE, memory.getByte(0x354));
+        assertEquals(0xF, memory.getByte(0x355));
     }
     
     @Test
     public void testOpcodeFX65() {
-        
+        cpu = new Cpu();
+        Memory memory = new Memory();
+        cpu.setMemory(memory);
+        cpu.setRegisterI(0x406);
+        memory.setByte(0x406, (byte)0x0);
+        memory.setByte(0x407, (byte)0x1);
+        memory.setByte(0x408, (byte)0x2);
+        memory.setByte(0x409, (byte)0x3);
+        memory.setByte(0x40A, (byte)0x4);
+        memory.setByte(0x40B, (byte)0x5);
+        memory.setByte(0x40C, (byte)0x6);
+        memory.setByte(0x40D, (byte)0x7);
+        memory.setByte(0x40E, (byte)0x8);
+        memory.setByte(0x40F, (byte)0x9);
+        memory.setByte(0x410, (byte)0xA);
+        memory.setByte(0x411, (byte)0xB);
+        memory.setByte(0x412, (byte)0xC);
+        memory.setByte(0x413, (byte)0xD);
+        memory.setByte(0x414, (byte)0xE);
+        memory.setByte(0x415, (byte)0xF);
+        cpu.runOpcode(0xFF65);
+        for(int i=0x0;i<=0xF;i++) {
+            assertEquals(i, cpu.getRegisterV(i));
+        }
     }
     
 }
