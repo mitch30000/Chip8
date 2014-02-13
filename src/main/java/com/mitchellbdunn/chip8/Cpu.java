@@ -37,7 +37,7 @@ public class Cpu {
         stack = new Stack<Integer>();
         delayTimer = 0;
         soundTimer = 0;
-        programCounter = 0;
+        programCounter = 0x200;
     }
 
     public void runOpcode(int opcode) {
@@ -172,6 +172,16 @@ public class Cpu {
                         break;
                 }
                 break;
+            default:
+                System.out.println("Unknown opcode: " + Integer.toHexString(opcode));
+        }
+        
+        // Decrement delay and sound timers
+        if(delayTimer > 0) {
+            delayTimer--;
+        }
+        if(soundTimer > 0) {
+            soundTimer--;
         }
     }
 
@@ -187,6 +197,7 @@ public class Cpu {
      */
     private void opcode00EE() {
         programCounter = stack.pop();
+        incrementProgramCounter();
     }
 
     /**

@@ -48,9 +48,9 @@ public class CpuTest {
     @Test
     public void testOpcode00EE() {
         cpu = new Cpu();
-        cpu.getStack().push(0x123);
-        cpu.getStack().push(0xCAB);
-        cpu.getStack().push(0xFFF);
+        cpu.getStack().push(0x121);
+        cpu.getStack().push(0xCA9);
+        cpu.getStack().push(0xFFD);
         cpu.runOpcode(0x00EE);
         assertEquals(0xFFF, cpu.getProgramCounter());
         cpu.runOpcode(0x00EE);
@@ -519,9 +519,13 @@ public class CpuTest {
         cpu.setRegisterV(0x3, 0x56);
         cpu.setRegisterV(0xA, 0xBC);
         cpu.runOpcode(0xF315);
-        assertEquals(0x56, cpu.getDelayTimer());
+        // Should be 55 since the timer will have decremented once
+        // due to running the opcode
+        assertEquals(0x55, cpu.getDelayTimer());
         cpu.runOpcode(0xFA15);
-        assertEquals(0xBC, cpu.getDelayTimer());
+        // Should be BB since the timer will have decremented once
+        // due to running the opcode
+        assertEquals(0xBB, cpu.getDelayTimer());
     }
     
     @Test
@@ -529,10 +533,14 @@ public class CpuTest {
         cpu = new Cpu();
         cpu.setRegisterV(0x4, 0x43);
         cpu.setRegisterV(0xE, 0x9F);
-        cpu.runOpcode(0xF415);
-        assertEquals(0x43, cpu.getDelayTimer());
-        cpu.runOpcode(0xFE15);
-        assertEquals(0x9F, cpu.getDelayTimer());
+        cpu.runOpcode(0xF418);
+        // Should be 42 since the timer will have decremented once
+        // due to running the opcode
+        assertEquals(0x42, cpu.getSoundTimer());
+        // Should be 9E since the timer will have decremented once
+        // due to running the opcode
+        cpu.runOpcode(0xFE18);
+        assertEquals(0x9E, cpu.getSoundTimer());
     }
     
     @Test

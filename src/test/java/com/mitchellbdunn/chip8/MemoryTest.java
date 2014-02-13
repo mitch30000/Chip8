@@ -44,7 +44,7 @@ public class MemoryTest {
         assertEquals(10, memory.getByte(0xfff));
     }
 
-    @Test()
+    @Test
     public void testLoadRom_DoesNotExist() throws Exception {
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage("'src/test/resources/com/mitchellbdunn/chip8/badpath' does not exist");
@@ -52,7 +52,7 @@ public class MemoryTest {
         memory.loadRom(TEST_RESOURCES + "badpath");
     }
 
-    @Test()
+    @Test
     public void testLoadRom_IsNotFile() throws Exception {
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage("'src/test/resources/com/mitchellbdunn/chip8/directory' is not a file");
@@ -60,11 +60,25 @@ public class MemoryTest {
         memory.loadRom(TEST_RESOURCES + "directory");
     }
 
-    @Test()
+    @Test
     public void testLoadRom_RomTooBig() throws Exception {
         expectedEx.expect(Exception.class);
         expectedEx.expectMessage("'src/test/resources/com/mitchellbdunn/chip8/bigRom' is not a valid Chip-8 rom");
         Memory memory = new Memory();
         memory.loadRom(TEST_RESOURCES + "bigRom");
+    }
+    
+    @Test
+    public void testGetOpcode() {
+        Memory memory = new Memory();
+        memory.setByte(0x200, (byte)0x38);
+        memory.setByte(0x201, (byte)0xFF);
+        memory.setByte(0x406, (byte)0xFA);
+        memory.setByte(0x407, (byte)0xBC);
+        memory.setByte(0xEDA, (byte)0x9D);
+        memory.setByte(0xEDB, (byte)0x48);
+        assertEquals(0x38FF, memory.getOpcode(0x200));
+        assertEquals(0xFABC, memory.getOpcode(0x406));
+        assertEquals(0x9D48, memory.getOpcode(0xEDA));
     }
 }

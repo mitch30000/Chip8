@@ -48,7 +48,7 @@ public class Memory {
     }
 
     public int getOpcode(int programCounter) {
-        return memory[programCounter] << 8 | memory[programCounter + 1];
+        return (((memory[programCounter] & 0xFF) << 8) | (memory[programCounter + 1] & 0xFF));
     }
 
     public void loadRom(String romPath) throws Exception {
