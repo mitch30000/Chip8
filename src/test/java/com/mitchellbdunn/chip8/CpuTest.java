@@ -351,8 +351,11 @@ public class CpuTest {
         cpu.setRegisterV(0x1, 1);
         cpu.setRegisterV(0x2, 63);
         cpu.setRegisterV(0x3, 31);
+        // ********
+        // *-*-*-*-
+        // ********
         memory.setByte(0x200, (byte)0xFF);
-        memory.setByte(0x201, (byte)0xC3);
+        memory.setByte(0x201, (byte)0xAA);
         memory.setByte(0x202, (byte)0xFF);
         cpu.setRegisterI(0x200);
         // Test drawing one row
@@ -393,13 +396,13 @@ public class CpuTest {
         assertFalse(screen.isPixelSet(6, 0));
         assertFalse(screen.isPixelSet(7, 0));
         assertTrue(screen.isPixelSet(0, 1));
-        assertTrue(screen.isPixelSet(1, 1));
-        assertFalse(screen.isPixelSet(2, 1));
+        assertFalse(screen.isPixelSet(1, 1));
+        assertTrue(screen.isPixelSet(2, 1));
         assertFalse(screen.isPixelSet(3, 1));
-        assertFalse(screen.isPixelSet(4, 1));
+        assertTrue(screen.isPixelSet(4, 1));
         assertFalse(screen.isPixelSet(5, 1));
         assertTrue(screen.isPixelSet(6, 1));
-        assertTrue(screen.isPixelSet(7, 1));
+        assertFalse(screen.isPixelSet(7, 1));
         assertTrue(screen.isPixelSet(0, 2));
         assertTrue(screen.isPixelSet(1, 2));
         assertTrue(screen.isPixelSet(2, 2));
@@ -450,13 +453,13 @@ public class CpuTest {
         assertTrue(screen.isPixelSet(5, 31));
         assertTrue(screen.isPixelSet(6, 31));
         assertTrue(screen.isPixelSet(63, 0));
-        assertTrue(screen.isPixelSet(0, 0));
-        assertFalse(screen.isPixelSet(1, 0));
+        assertFalse(screen.isPixelSet(0, 0));
+        assertTrue(screen.isPixelSet(1, 0));
         assertFalse(screen.isPixelSet(2, 0));
-        assertFalse(screen.isPixelSet(3, 0));
+        assertTrue(screen.isPixelSet(3, 0));
         assertFalse(screen.isPixelSet(4, 0));
         assertTrue(screen.isPixelSet(5, 0));
-        assertTrue(screen.isPixelSet(6, 0));
+        assertFalse(screen.isPixelSet(6, 0));
         assertTrue(screen.isPixelSet(63, 1));
         assertTrue(screen.isPixelSet(0, 1));
         assertTrue(screen.isPixelSet(1, 1));

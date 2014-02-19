@@ -450,8 +450,10 @@ public class Cpu {
             // Loop through each bit to know how to draw it to
             // the screen (represents X coordinate)
             for (int j = 0; j < 8; j++) {
-                // Boolean representing if the bit was set or not
-                boolean drawPixel = Chip8Util.getBit(row, j);
+                // Boolean representing if the bit was set or not, we need
+                // to read from MSB to LSB, so we invert the j index to
+                // get the position we need.
+                boolean drawPixel = Chip8Util.getBit(row, 7-j);
                 if (drawPixel) {
                     // Get the coordinates to draw to
                     int drawX = registerV[x] + j;
@@ -464,13 +466,14 @@ public class Cpu {
                     while(drawY >= Chip8.SCREEN_HEIGHT) {
                         drawY -= Chip8.SCREEN_HEIGHT;
                     }
-                    // Draw the pixel, and get a boolean representing
-                    // if we should set register VF or not.  Pixels
-                    // are XOR into the existing screen.
-                    boolean setVF = screen.drawPixel(drawX, drawY);
-                    if (setVF) {
+                    // If the pixel is set, then it will get unset and
+                    // VF should be set to 1
+                    if(screen.isPixelSet(drawX, drawY)) {
                         registerV[0xF] = 0x1;
                     }
+                    // Draw the pixel.  Pixels  are XOR into the 
+                    // existing screen.
+                    screen.drawPixel(drawX, drawY);
                 }
             }
         }

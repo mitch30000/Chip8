@@ -28,13 +28,9 @@ public class Screen extends JPanel {
         screen[y][x] = value;
     }
 
-    public boolean drawPixel(int x, int y) {
+    public void drawPixel(int x, int y) {
         // XOR the pixel
         screen[y][x] = !screen[y][x];
-        // We return a boolean representing if the pixel was
-        // set from 1 to 0.  This is so we can know how to set
-        // register VF during drawing.
-        return !screen[y][x];
     }
 
     @Override
