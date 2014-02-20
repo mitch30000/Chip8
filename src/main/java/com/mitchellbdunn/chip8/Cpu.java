@@ -1,5 +1,6 @@
 package com.mitchellbdunn.chip8;
 
+import java.awt.Toolkit;
 import java.util.Random;
 import java.util.Stack;
 
@@ -176,11 +177,13 @@ public class Cpu {
                 System.out.println("Unknown opcode: " + Integer.toHexString(opcode));
         }
         
-        // Decrement delay and sound timers
+        // Decrement delay and sound timers, if sound timer is
+        // greater than zero, then play a sound
         if(delayTimer > 0) {
             delayTimer--;
         }
         if(soundTimer > 0) {
+            Toolkit.getDefaultToolkit().beep();
             soundTimer--;
         }
     }
