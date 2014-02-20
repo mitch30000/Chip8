@@ -1,6 +1,6 @@
 package com.mitchellbdunn.chip8.system;
 
-import com.mitchellbdunn.chip8.Chip8;
+import com.mitchellbdunn.chip8.util.Chip8Constants;
 import com.mitchellbdunn.chip8.util.Chip8Util;
 import java.awt.Toolkit;
 import java.util.Random;
@@ -25,6 +25,7 @@ public class Cpu {
     private int soundTimer;
     private int programCounter;
     private final Random rng;
+    private boolean running;
 
     public Cpu() {
         initializeCpu();
@@ -32,6 +33,7 @@ public class Cpu {
     }
 
     public final void initializeCpu() {
+        running = false;
         registerV = new int[16];
         for (int i = 0; i < 0xF; i++) {
             registerV[i] = 0;
@@ -41,6 +43,19 @@ public class Cpu {
         delayTimer = 0;
         soundTimer = 0;
         programCounter = 0x200;
+    }
+
+    public void run() {
+        running = true;
+        while (running) {
+            int opcode = memory.getOpcode(getProgramCounter());
+            runOpcode(opcode);
+            try {
+                Thread.sleep(5);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     public void runOpcode(int opcode) {
@@ -178,13 +193,13 @@ public class Cpu {
             default:
                 System.out.println("Unknown opcode: " + Integer.toHexString(opcode));
         }
-        
+
         // Decrement delay and sound timers, if sound timer is
         // greater than zero, then play a sound
-        if(delayTimer > 0) {
+        if (delayTimer > 0) {
             delayTimer--;
         }
-        if(soundTimer > 0) {
+        if (soundTimer > 0) {
             Toolkit.getDefaultToolkit().beep();
             soundTimer--;
         }
@@ -329,7 +344,7 @@ public class Cpu {
      */
     private void opcode8XY4(int x, int y) {
         registerV[x] += registerV[y];
-        registerV[0xF] = Chip8Util.getBit(registerV[x], 8)?1:0;
+        registerV[0xF] = Chip8Util.getBit(registerV[x], 8) ? 1 : 0;
         registerV[x] &= 0xFF;
     }
 
@@ -341,12 +356,12 @@ public class Cpu {
      * @param y register to get value to subtract from register VX.
      */
     private void opcode8XY5(int x, int y) {
-        if(registerV[x] >= registerV[y]) {
+        if (registerV[x] >= registerV[y]) {
             registerV[0xF] = 1;
             registerV[x] -= registerV[y];
         } else {
             registerV[0xF] = 0;
-            registerV[x] = (int)(0xFF + (registerV[x] - registerV[y] + 1));
+            registerV[x] = (int) (0xFF + (registerV[x] - registerV[y] + 1));
         }
     }
 
@@ -371,12 +386,12 @@ public class Cpu {
      * @param y register to get value of minuend for subtraction.
      */
     private void opcode8XY7(int x, int y) {
-        if(registerV[y] >= registerV[x]) {
+        if (registerV[y] >= registerV[x]) {
             registerV[0xF] = 1;
             registerV[x] = registerV[y] - registerV[x];
         } else {
             registerV[0xF] = 0;
-            registerV[x] = (int)(0xFF + (registerV[y] - registerV[x] + 1));
+            registerV[x] = (int) (0xFF + (registerV[y] - registerV[x] + 1));
         }
     }
 
@@ -458,22 +473,22 @@ public class Cpu {
                 // Boolean representing if the bit was set or not, we need
                 // to read from MSB to LSB, so we invert the j index to
                 // get the position we need.
-                boolean drawPixel = Chip8Util.getBit(row, 7-j);
+                boolean drawPixel = Chip8Util.getBit(row, 7 - j);
                 if (drawPixel) {
                     // Get the coordinates to draw to
                     int drawX = registerV[x] + j;
                     int drawY = registerV[y] + i;
                     // If a pixel will be drawn off the screen it
                     // instead wraps around the screen
-                    while(drawX >= Chip8.SCREEN_WIDTH) {
-                        drawX -= Chip8.SCREEN_WIDTH;
+                    while (drawX >= Chip8Constants.SCREEN_WIDTH) {
+                        drawX -= Chip8Constants.SCREEN_WIDTH;
                     }
-                    while(drawY >= Chip8.SCREEN_HEIGHT) {
-                        drawY -= Chip8.SCREEN_HEIGHT;
+                    while (drawY >= Chip8Constants.SCREEN_HEIGHT) {
+                        drawY -= Chip8Constants.SCREEN_HEIGHT;
                     }
                     // If the pixel is set, then it will get unset and
                     // VF should be set to 1
-                    if(screen.isPixelSet(drawX, drawY)) {
+                    if (screen.isPixelSet(drawX, drawY)) {
                         registerV[0xF] = 0x1;
                     }
                     // Draw the pixel.  Pixels  are XOR into the 
@@ -676,5 +691,13 @@ public class Cpu {
 
     public void setMemory(Memory memory) {
         this.memory = memory;
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
     }
 }

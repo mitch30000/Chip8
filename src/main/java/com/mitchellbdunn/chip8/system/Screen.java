@@ -1,6 +1,6 @@
 package com.mitchellbdunn.chip8.system;
 
-import com.mitchellbdunn.chip8.Chip8;
+import com.mitchellbdunn.chip8.util.Chip8Constants;
 import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
@@ -18,7 +18,7 @@ public class Screen extends JPanel {
     }
 
     public final void initializeScreen() {
-        screen = new boolean[Chip8.SCREEN_HEIGHT][Chip8.SCREEN_WIDTH];
+        screen = new boolean[Chip8Constants.SCREEN_HEIGHT][Chip8Constants.SCREEN_WIDTH];
     }
 
     public boolean isPixelSet(int x, int y) {
@@ -36,15 +36,15 @@ public class Screen extends JPanel {
 
     @Override
     public void paintComponent(Graphics g) {
-        for (int x = 0; x < Chip8.SCREEN_WIDTH; x++) {
-            for (int y = 0; y < Chip8.SCREEN_HEIGHT; y++) {
+        for (int x = 0; x < Chip8Constants.SCREEN_WIDTH; x++) {
+            for (int y = 0; y < Chip8Constants.SCREEN_HEIGHT; y++) {
                 if (isPixelSet(x, y)) {
                     g.setColor(Color.WHITE);
                 } else {
                     g.setColor(Color.BLACK);
                 }
-                g.fillRect(x * Chip8.SCREEN_MULTIPLIER, y * Chip8.SCREEN_MULTIPLIER,
-                        Chip8.SCREEN_MULTIPLIER, Chip8.SCREEN_MULTIPLIER);
+                g.fillRect(x * Chip8Constants.SCREEN_MULTIPLIER, y * Chip8Constants.SCREEN_MULTIPLIER,
+                        Chip8Constants.SCREEN_MULTIPLIER, Chip8Constants.SCREEN_MULTIPLIER);
             }
         }
     }

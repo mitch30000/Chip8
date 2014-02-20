@@ -1,7 +1,7 @@
 
 package com.mitchellbdunn.chip8.system;
 
-import com.mitchellbdunn.chip8.Chip8;
+import com.mitchellbdunn.chip8.util.Chip8Constants;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashMap;
@@ -56,7 +56,7 @@ public class Keyboard implements KeyListener {
         waitingForKeyPress = true;
         while(waitingForKeyPress) {
             try {
-                Thread.sleep(Chip8.HERTZ);
+                Thread.sleep(Chip8Constants.HERTZ);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }

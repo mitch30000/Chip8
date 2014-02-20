@@ -34,11 +34,11 @@ public class Memory {
 
     public Memory() {
         initializeMemory();
-        loadFont();
     }
 
     public final void initializeMemory() {
         memory = new byte[4096];
+        loadFont();
     }
 
     public final void loadFont() {
