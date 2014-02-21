@@ -23,7 +23,7 @@ import javax.swing.WindowConstants;
  * @author Mitch
  */
 public class Frame extends JFrame {
-
+    
     public Frame(final Cpu cpu, final Memory memory, final Keyboard keyboard, final Screen screen) {
         // Create frame
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -33,6 +33,7 @@ public class Frame extends JFrame {
         // Create menu bar
         JMenuBar menuBar = new JMenuBar();
         this.setJMenuBar(menuBar);
+        
         JMenu fileMenu = new JMenu("File");
         final JMenuItem loadRomMenuItem = new JMenuItem("Load Rom");
         final JMenuItem closeRomMenuItem = new JMenuItem("Close Rom");
@@ -45,6 +46,8 @@ public class Frame extends JFrame {
         fileMenu.addSeparator();
         fileMenu.add(exitMenuItem);
         menuBar.add(fileMenu);
+        OptionsMenu optionsMenu = new OptionsMenu(screen, Chip8Constants.DEFAULT_SCREEN_MULTIPLIER);
+        menuBar.add(optionsMenu);
 
         loadRomMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -99,8 +102,8 @@ public class Frame extends JFrame {
         this.addKeyListener(keyboard);
         this.setFocusable(true);
 
-        screen.setPreferredSize(new Dimension(Chip8Constants.SCREEN_WIDTH * Chip8Constants.SCREEN_MULTIPLIER,
-                Chip8Constants.SCREEN_HEIGHT * Chip8Constants.SCREEN_MULTIPLIER));
+        screen.setPreferredSize(new Dimension(Chip8Constants.SCREEN_WIDTH * optionsMenu.getScreenMultiplier(),
+                Chip8Constants.SCREEN_HEIGHT * optionsMenu.getScreenMultiplier()));
         this.getContentPane().add(screen);
         this.pack();
     }

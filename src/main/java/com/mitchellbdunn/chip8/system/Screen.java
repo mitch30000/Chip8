@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 public class Screen extends JPanel {
 
     private boolean[][] screen;
+    private int screenMultiplier;
 
     public Screen() {
         initializeScreen();
@@ -34,6 +35,10 @@ public class Screen extends JPanel {
         screen[y][x] = !screen[y][x];
     }
 
+    public void setScreenMultipler(int screenMultiplier) {
+        this.screenMultiplier = screenMultiplier;
+    }
+    
     @Override
     public void paintComponent(Graphics g) {
         for (int x = 0; x < Chip8Constants.SCREEN_WIDTH; x++) {
@@ -43,10 +48,9 @@ public class Screen extends JPanel {
                 } else {
                     g.setColor(Color.BLACK);
                 }
-                g.fillRect(x * Chip8Constants.SCREEN_MULTIPLIER, y * Chip8Constants.SCREEN_MULTIPLIER,
-                        Chip8Constants.SCREEN_MULTIPLIER, Chip8Constants.SCREEN_MULTIPLIER);
+                g.fillRect(x * screenMultiplier, y * screenMultiplier,
+                        screenMultiplier, screenMultiplier);
             }
         }
     }
-
 }
