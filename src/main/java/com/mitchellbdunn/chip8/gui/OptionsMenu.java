@@ -18,6 +18,7 @@ public class OptionsMenu extends JMenu {
 
     private int screenMultiplier;
     private final Screen screen;
+    private final JMenu screenSizeMenu;
     private final JMenuItem screenSize4;
     private final JMenuItem screenSize5;
     private final JMenuItem screenSize6;
@@ -33,7 +34,7 @@ public class OptionsMenu extends JMenu {
         screen.setScreenMultipler(screenMultiplier);
         
         // Create the menu and menu items
-        JMenu screenSizeMenu = new JMenu("Screen Size");
+        screenSizeMenu = new JMenu("Screen Size");
         screenSize4 = new JRadioButtonMenuItem("256x128");
         screenSize5 = new JRadioButtonMenuItem("320x160");
         screenSize6 = new JRadioButtonMenuItem("384x192");
