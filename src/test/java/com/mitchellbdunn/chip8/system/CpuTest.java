@@ -1,10 +1,7 @@
 
 package com.mitchellbdunn.chip8.system;
 
-import com.mitchellbdunn.chip8.system.Screen;
-import com.mitchellbdunn.chip8.system.Memory;
-import com.mitchellbdunn.chip8.system.Cpu;
-import com.mitchellbdunn.chip8.system.Keyboard;
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.Stack;
 import static org.junit.Assert.assertEquals;
@@ -23,7 +20,7 @@ public class CpuTest {
     @Test
     public void testOpcode00E0() {
         cpu = new Cpu();
-        Screen screen = new Screen();
+        Screen screen = new Screen(Color.BLACK, Color.WHITE);
         cpu.setScreen(screen);
         for(int i=0;i<32;i++) {
             for(int j=0;j<64;j++) {
@@ -347,7 +344,7 @@ public class CpuTest {
     public void testOpcodeDXYN() {
         // Set up everything
         cpu = new Cpu();
-        Screen screen = new Screen();
+        Screen screen = new Screen(Color.BLACK, Color.WHITE);
         Memory memory = new Memory();
         cpu.setScreen(screen);
         cpu.setMemory(memory);

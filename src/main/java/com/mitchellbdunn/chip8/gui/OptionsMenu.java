@@ -2,13 +2,18 @@ package com.mitchellbdunn.chip8.gui;
 
 import com.mitchellbdunn.chip8.system.Screen;
 import com.mitchellbdunn.chip8.util.Chip8Constants;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JColorChooser;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.colorchooser.AbstractColorChooserPanel;
 
 /**
  *
@@ -26,6 +31,8 @@ public class OptionsMenu extends JMenu {
     private final JMenuItem screenSize8;
     private final JMenuItem screenSize9;
     private final JMenuItem screenSize10;
+    private final JMenuItem backgroundColor;
+    private final JMenuItem foregroundColor;
     
     public OptionsMenu(Screen screen, int defaultScreenMultiplier) {
         super("Options");
@@ -42,6 +49,8 @@ public class OptionsMenu extends JMenu {
         screenSize8 = new JRadioButtonMenuItem("512x256");
         screenSize9 = new JRadioButtonMenuItem("576x288");
         screenSize10 = new JRadioButtonMenuItem("640x320");
+        backgroundColor = new JMenuItem("Change Background Color");
+        foregroundColor = new JMenuItem("Change Foreground Color");
         
         // Set the default screen size as selected
         if(screenMultiplier == 4) {
@@ -63,6 +72,7 @@ public class OptionsMenu extends JMenu {
         // Set up action listeners as well as add the menu items
         // to the menu
         ActionListener screenSizeListener = new ScreenSizeListener();
+        ActionListener colorChangeListener = new ColorChangeListener();
         screenSize4.addActionListener(screenSizeListener);
         screenSizeMenu.add(screenSize4);
         screenSize5.addActionListener(screenSizeListener);
@@ -77,7 +87,12 @@ public class OptionsMenu extends JMenu {
         screenSizeMenu.add(screenSize9);
         screenSize10.addActionListener(screenSizeListener);
         screenSizeMenu.add(screenSize10);
+        backgroundColor.addActionListener(colorChangeListener);
+        foregroundColor.addActionListener(colorChangeListener);
         this.add(screenSizeMenu);
+        this.addSeparator();
+        this.add(backgroundColor);
+        this.add(foregroundColor);
     }
     
     public int getScreenMultiplier() {
@@ -108,6 +123,34 @@ public class OptionsMenu extends JMenu {
             screen.setPreferredSize(new Dimension(Chip8Constants.SCREEN_WIDTH * screenMultiplier,
                 Chip8Constants.SCREEN_HEIGHT * screenMultiplier));
             ((JFrame) OptionsMenu.this.getTopLevelAncestor()).pack();
+        }
+    }
+    
+    private class ColorChangeListener implements ActionListener {
+        public void actionPerformed(ActionEvent ae) {
+            // Get the source of the action
+            JMenuItem source = (JMenuItem) ae.getSource();
+            // Get the text representing the name of the source
+            String menuItemName = source.getText();
+            // Create a color chooser
+            JColorChooser colorChooser = new JColorChooser();
+            // Make a color chooser with only swatches
+            AbstractColorChooserPanel[] panels = colorChooser.getChooserPanels();
+            colorChooser.removeChooserPanel(panels[1]);
+            colorChooser.removeChooserPanel(panels[2]);
+            colorChooser.removeChooserPanel(panels[3]);
+            colorChooser.removeChooserPanel(panels[4]);
+            // Remove preview panel
+            colorChooser.setPreviewPanel(new JPanel());
+            JDialog dialog = JColorChooser.createDialog(OptionsMenu.this, "Choose Color", true, colorChooser, null, null);
+            dialog.setVisible(true);
+            Color color = colorChooser.getColor();
+            if(menuItemName.contains("Background")) {
+                screen.setBackgroundColor(color);
+            } else if(menuItemName.contains("Foreground")) {
+                screen.setForegroundColor(color);
+            }
+            screen.repaint();
         }
     }
 }

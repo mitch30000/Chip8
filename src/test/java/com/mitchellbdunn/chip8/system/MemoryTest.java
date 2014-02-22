@@ -1,6 +1,5 @@
 package com.mitchellbdunn.chip8.system;
 
-import com.mitchellbdunn.chip8.system.Memory;
 import static org.junit.Assert.assertEquals;
 import org.junit.Rule;
 import org.junit.Test;

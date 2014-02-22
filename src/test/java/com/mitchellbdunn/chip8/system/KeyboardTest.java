@@ -1,7 +1,6 @@
 
 package com.mitchellbdunn.chip8.system;
 
-import com.mitchellbdunn.chip8.system.Keyboard;
 import java.awt.event.KeyEvent;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

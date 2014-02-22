@@ -13,8 +13,12 @@ public class Screen extends JPanel {
 
     private boolean[][] screen;
     private int screenMultiplier;
+    private Color backgroundColor;
+    private Color foregroundColor;
 
-    public Screen() {
+    public Screen(Color backgroundColor, Color foregroundColor) {
+        this.backgroundColor = backgroundColor;
+        this.foregroundColor = foregroundColor;
         initializeScreen();
     }
 
@@ -39,14 +43,22 @@ public class Screen extends JPanel {
         this.screenMultiplier = screenMultiplier;
     }
     
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+    
+    public void setForegroundColor(Color foregroundColor) {
+        this.foregroundColor = foregroundColor;
+    }
+    
     @Override
     public void paintComponent(Graphics g) {
         for (int x = 0; x < Chip8Constants.SCREEN_WIDTH; x++) {
             for (int y = 0; y < Chip8Constants.SCREEN_HEIGHT; y++) {
                 if (isPixelSet(x, y)) {
-                    g.setColor(Color.WHITE);
+                    g.setColor(foregroundColor);
                 } else {
-                    g.setColor(Color.BLACK);
+                    g.setColor(backgroundColor);
                 }
                 g.fillRect(x * screenMultiplier, y * screenMultiplier,
                         screenMultiplier, screenMultiplier);

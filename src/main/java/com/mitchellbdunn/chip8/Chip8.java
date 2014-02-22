@@ -5,6 +5,7 @@ import com.mitchellbdunn.chip8.system.Screen;
 import com.mitchellbdunn.chip8.system.Memory;
 import com.mitchellbdunn.chip8.system.Keyboard;
 import com.mitchellbdunn.chip8.system.Cpu;
+import java.awt.Color;
 import javax.swing.SwingUtilities;
 
 /**
@@ -25,7 +26,7 @@ public class Chip8 {
                 Keyboard keyboard = new Keyboard();
                 cpu.setKeyboard(keyboard);
 
-                Screen screen = new Screen();
+                Screen screen = new Screen(Color.BLACK, Color.WHITE);
                 cpu.setScreen(screen);
                 
                 Frame frame = new Frame(cpu, memory, keyboard, screen);
