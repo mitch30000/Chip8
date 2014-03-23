@@ -1,9 +1,9 @@
 Chip-8
 =========
 
-Chip-8 emulator written in Java
+Chip-8 emulator written in Java which uses Swing.
 
-This project is currently a work in development.
+This project can load a Chip-8 ROM and play it.  Users can change the screen size as well as the colors used for displaying.
 
 License
 -------
