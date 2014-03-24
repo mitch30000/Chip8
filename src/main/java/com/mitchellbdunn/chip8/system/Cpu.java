@@ -1,7 +1,6 @@
 package com.mitchellbdunn.chip8.system;
 
 import com.mitchellbdunn.chip8.util.Chip8Constants;
-import com.mitchellbdunn.chip8.util.Chip8Util;
 import java.awt.Toolkit;
 import java.util.Random;
 import java.util.Stack;
@@ -58,13 +57,24 @@ public class Cpu {
         }
     }
 
+    /**
+     * Returns a boolean representing the bit value
+     * @param number The number to check the bit of
+     * @param position The bit position to check from within
+     * the number.  The LSB is at position 0.
+     * @return 
+     */
+    public static boolean getBit(int number, int position) {
+        return (((number >> position) & 1) == 1);
+    }
+    
     public void runOpcode(int opcode) {
         // Get the possible variables needed from the opcode
-        int nnn = Chip8Util.getNNN(opcode);
-        int nn = Chip8Util.getNN(opcode);
-        int n = Chip8Util.getN(opcode);
-        int x = Chip8Util.getX(opcode);
-        int y = Chip8Util.getY(opcode);
+        int nnn = (opcode & 0x0FFF);
+        int nn = (opcode & 0x00FF);
+        int n = (opcode & 0x000F);
+        int x = (opcode & 0x0F00) >> 8;
+        int y = (opcode & 0x00F0) >> 4;
 
         // Increase the program counter; there are some opcodes where
         // this won't matter since we set the program counter there
@@ -344,7 +354,7 @@ public class Cpu {
      */
     private void opcode8XY4(int x, int y) {
         registerV[x] += registerV[y];
-        registerV[0xF] = Chip8Util.getBit(registerV[x], 8) ? 1 : 0;
+        registerV[0xF] = getBit(registerV[x], 8) ? 1 : 0;
         registerV[x] &= 0xFF;
     }
 
@@ -373,7 +383,7 @@ public class Cpu {
      * @param y not used.
      */
     private void opcode8XY6(int x, int y) {
-        registerV[0xF] = Chip8Util.getBit(registerV[x], 0) ? 1 : 0;
+        registerV[0xF] = getBit(registerV[x], 0) ? 1 : 0;
         registerV[x] >>>= 1;
     }
 
@@ -403,7 +413,7 @@ public class Cpu {
      * @param y not used.
      */
     private void opcode8XYE(int x, int y) {
-        registerV[0xF] = Chip8Util.getBit(registerV[x], 7) ? 1 : 0;
+        registerV[0xF] = getBit(registerV[x], 7) ? 1 : 0;
         registerV[x] <<= 1;
         registerV[x] &= 0xFF;
     }
@@ -473,7 +483,7 @@ public class Cpu {
                 // Boolean representing if the bit was set or not, we need
                 // to read from MSB to LSB, so we invert the j index to
                 // get the position we need.
-                boolean drawPixel = Chip8Util.getBit(row, 7 - j);
+                boolean drawPixel = getBit(row, 7 - j);
                 if (drawPixel) {
                     // Get the coordinates to draw to
                     int drawX = registerV[x] + j;
