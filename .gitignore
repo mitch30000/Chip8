@@ -12,3 +12,4 @@ release.properties
 # Class files #
 
 *.class
+nbactions.xml
