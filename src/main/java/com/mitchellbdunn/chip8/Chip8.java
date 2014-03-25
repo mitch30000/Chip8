@@ -13,7 +13,11 @@ import javax.swing.SwingUtilities;
  * @author Mitch
  */
 public class Chip8 {
-
+    public static int SCREEN_WIDTH = 64;
+    public static int SCREEN_HEIGHT = 32;
+    public static int HERTZ = 1000 / 60;
+    public static int DEFAULT_SCREEN_MULTIPLIER = 6;
+    
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
