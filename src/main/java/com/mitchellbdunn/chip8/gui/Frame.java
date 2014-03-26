@@ -1,10 +1,10 @@
 package com.mitchellbdunn.chip8.gui;
 
+import com.mitchellbdunn.chip8.Chip8;
 import com.mitchellbdunn.chip8.system.Cpu;
 import com.mitchellbdunn.chip8.system.Keyboard;
 import com.mitchellbdunn.chip8.system.Memory;
 import com.mitchellbdunn.chip8.system.Screen;
-import com.mitchellbdunn.chip8.util.Chip8Constants;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -26,17 +26,21 @@ public class Frame extends JFrame {
         JMenuBar menuBar = new JMenuBar();
         this.setJMenuBar(menuBar);
         
+        // Create panel
+        final Panel panel = new Panel(screen);
+        cpu.addObserver(panel);
+        
+        // Create menu options
         FileMenu fileMenu = new FileMenu(cpu, memory, keyboard, screen);
         menuBar.add(fileMenu);
-        OptionsMenu optionsMenu = new OptionsMenu(screen, Chip8Constants.DEFAULT_SCREEN_MULTIPLIER);
+        OptionsMenu optionsMenu = new OptionsMenu(screen, panel, Chip8.DEFAULT_SCREEN_MULTIPLIER);
         menuBar.add(optionsMenu);
 
         this.addKeyListener(keyboard);
         this.setFocusable(true);
-
-        screen.setPreferredSize(new Dimension(Chip8Constants.SCREEN_WIDTH * optionsMenu.getScreenMultiplier(),
-                Chip8Constants.SCREEN_HEIGHT * optionsMenu.getScreenMultiplier()));
-        this.getContentPane().add(screen);
+        panel.setPreferredSize(new Dimension(Chip8.SCREEN_WIDTH * Chip8.DEFAULT_SCREEN_MULTIPLIER,
+                Chip8.SCREEN_HEIGHT * Chip8.DEFAULT_SCREEN_MULTIPLIER));
+        this.getContentPane().add(panel);
         this.pack();
     }
 }

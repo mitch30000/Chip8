@@ -1,7 +1,8 @@
 package com.mitchellbdunn.chip8.system;
 
-import com.mitchellbdunn.chip8.util.Chip8Constants;
+import com.mitchellbdunn.chip8.Chip8;
 import java.awt.Toolkit;
+import java.util.Observable;
 import java.util.Random;
 import java.util.Stack;
 
@@ -9,7 +10,7 @@ import java.util.Stack;
  *
  * @author Mitch
  */
-public class Cpu {
+public class Cpu extends Observable {
 
     // Chip8 units
     private Keyboard keyboard;
@@ -490,11 +491,11 @@ public class Cpu {
                     int drawY = registerV[y] + i;
                     // If a pixel will be drawn off the screen it
                     // instead wraps around the screen
-                    while (drawX >= Chip8Constants.SCREEN_WIDTH) {
-                        drawX -= Chip8Constants.SCREEN_WIDTH;
+                    while (drawX >= Chip8.SCREEN_WIDTH) {
+                        drawX -= Chip8.SCREEN_WIDTH;
                     }
-                    while (drawY >= Chip8Constants.SCREEN_HEIGHT) {
-                        drawY -= Chip8Constants.SCREEN_HEIGHT;
+                    while (drawY >= Chip8.SCREEN_HEIGHT) {
+                        drawY -= Chip8.SCREEN_HEIGHT;
                     }
                     // If the pixel is set, then it will get unset and
                     // VF should be set to 1
@@ -507,7 +508,8 @@ public class Cpu {
                 }
             }
         }
-        screen.repaint();
+        setChanged();
+        notifyObservers();
     }
 
     /**

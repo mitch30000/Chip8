@@ -1,7 +1,7 @@
 package com.mitchellbdunn.chip8.gui;
 
 import com.mitchellbdunn.chip8.system.Screen;
-import com.mitchellbdunn.chip8.util.Chip8Constants;
+import com.mitchellbdunn.chip8.Chip8;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -23,6 +23,7 @@ public class OptionsMenu extends JMenu {
 
     private int screenMultiplier;
     private final Screen screen;
+    private final Panel panel;
     private final JMenu screenSizeMenu;
     private final JMenuItem screenSize4;
     private final JMenuItem screenSize5;
@@ -34,9 +35,10 @@ public class OptionsMenu extends JMenu {
     private final JMenuItem backgroundColor;
     private final JMenuItem foregroundColor;
     
-    public OptionsMenu(Screen screen, int defaultScreenMultiplier) {
+    public OptionsMenu(Screen screen, Panel panel, int defaultScreenMultiplier) {
         super("Options");
         this.screen = screen;
+        this.panel = panel;
         screenMultiplier = defaultScreenMultiplier;
         screen.setScreenMultipler(screenMultiplier);
         
@@ -117,11 +119,14 @@ public class OptionsMenu extends JMenu {
             source.setSelected(true);
             // Get the screen multiplier from the menu item name, this way we can
             // set one action listener for all 10 menu items, rather than one action
-            // listeners for each menu item.
+            // listeners for each menu item.  We take the first number and divide it
+            // 64 (the default pixel width of the chip8) so we can get the multiplier.
+            // For example, the first option is 256x128, so in this case it would come
+            // out to be 4.
             screenMultiplier = Integer.parseInt(menuItemName.split("x")[0]) / 64;
             screen.setScreenMultipler(screenMultiplier);
-            screen.setPreferredSize(new Dimension(Chip8Constants.SCREEN_WIDTH * screenMultiplier,
-                Chip8Constants.SCREEN_HEIGHT * screenMultiplier));
+            panel.setPreferredSize(new Dimension(Chip8.SCREEN_WIDTH * screenMultiplier,
+                Chip8.SCREEN_HEIGHT * screenMultiplier));
             ((JFrame) OptionsMenu.this.getTopLevelAncestor()).pack();
         }
     }
@@ -150,7 +155,7 @@ public class OptionsMenu extends JMenu {
             } else if(menuItemName.contains("Foreground")) {
                 screen.setForegroundColor(color);
             }
-            screen.repaint();
+            panel.repaint();
         }
     }
 }

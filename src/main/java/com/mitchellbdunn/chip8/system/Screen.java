@@ -1,15 +1,13 @@
 package com.mitchellbdunn.chip8.system;
 
-import com.mitchellbdunn.chip8.util.Chip8Constants;
+import com.mitchellbdunn.chip8.Chip8;
 import java.awt.Color;
-import java.awt.Graphics;
-import javax.swing.JPanel;
 
 /**
  *
  * @author Mitch
  */
-public class Screen extends JPanel {
+public class Screen {
 
     private boolean[][] screen;
     private int screenMultiplier;
@@ -23,7 +21,7 @@ public class Screen extends JPanel {
     }
 
     public final void initializeScreen() {
-        screen = new boolean[Chip8Constants.SCREEN_HEIGHT][Chip8Constants.SCREEN_WIDTH];
+        screen = new boolean[Chip8.SCREEN_HEIGHT][Chip8.SCREEN_WIDTH];
     }
 
     public boolean isPixelSet(int x, int y) {
@@ -43,26 +41,23 @@ public class Screen extends JPanel {
         this.screenMultiplier = screenMultiplier;
     }
     
+    public int getScreenMultiplier() {
+        return screenMultiplier;
+    }
+    
     public void setBackgroundColor(Color backgroundColor) {
         this.backgroundColor = backgroundColor;
+    }
+    
+    public Color getBackgroundColor() {
+        return backgroundColor;
     }
     
     public void setForegroundColor(Color foregroundColor) {
         this.foregroundColor = foregroundColor;
     }
     
-    @Override
-    public void paintComponent(Graphics g) {
-        for (int x = 0; x < Chip8Constants.SCREEN_WIDTH; x++) {
-            for (int y = 0; y < Chip8Constants.SCREEN_HEIGHT; y++) {
-                if (isPixelSet(x, y)) {
-                    g.setColor(foregroundColor);
-                } else {
-                    g.setColor(backgroundColor);
-                }
-                g.fillRect(x * screenMultiplier, y * screenMultiplier,
-                        screenMultiplier, screenMultiplier);
-            }
-        }
+    public Color getForegroundColor() {
+        return foregroundColor;
     }
 }

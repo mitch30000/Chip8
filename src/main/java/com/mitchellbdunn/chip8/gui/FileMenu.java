@@ -87,7 +87,6 @@ public class FileMenu extends JMenu {
             loadRomMenuItem.setEnabled(true);
             cpu.setRunning(false);
             screen.initializeScreen();
-            screen.repaint();
         }
     }
 
