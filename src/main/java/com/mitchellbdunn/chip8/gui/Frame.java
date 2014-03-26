@@ -1,6 +1,7 @@
 package com.mitchellbdunn.chip8.gui;
 
 import com.mitchellbdunn.chip8.Chip8;
+import com.mitchellbdunn.chip8.listeners.KeyboardListener;
 import com.mitchellbdunn.chip8.system.Cpu;
 import com.mitchellbdunn.chip8.system.Keyboard;
 import com.mitchellbdunn.chip8.system.Memory;
@@ -36,7 +37,8 @@ public class Frame extends JFrame {
         OptionsMenu optionsMenu = new OptionsMenu(screen, panel, Chip8.DEFAULT_SCREEN_MULTIPLIER);
         menuBar.add(optionsMenu);
 
-        this.addKeyListener(keyboard);
+        KeyboardListener keyboardListener = new KeyboardListener(keyboard);
+        this.addKeyListener(keyboardListener);
         this.setFocusable(true);
         panel.setPreferredSize(new Dimension(Chip8.SCREEN_WIDTH * Chip8.DEFAULT_SCREEN_MULTIPLIER,
                 Chip8.SCREEN_HEIGHT * Chip8.DEFAULT_SCREEN_MULTIPLIER));

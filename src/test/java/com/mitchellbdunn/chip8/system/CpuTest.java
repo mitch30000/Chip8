@@ -482,7 +482,7 @@ public class CpuTest {
         cpu.setRegisterV(0x3, 0x1);
         cpu.runOpcode(0xE39E);
         assertEquals(0x202, cpu.getProgramCounter());
-        keyboard.keyPress(KeyEvent.VK_1);
+        keyboard.keyPress(0x1);
         cpu.runOpcode(0xE39E);
         assertEquals(0x206, cpu.getProgramCounter());
     }
@@ -496,7 +496,7 @@ public class CpuTest {
         cpu.setRegisterV(0xE, 0x3);
         cpu.runOpcode(0xEEA1);
         assertEquals(0x204, cpu.getProgramCounter());
-        keyboard.keyPress(KeyEvent.VK_3);
+        keyboard.keyPress(0x3);
         cpu.runOpcode(0xEEA1);
         assertEquals(0x206, cpu.getProgramCounter());
     }
