@@ -1,7 +1,9 @@
 package com.mitchellbdunn.chip8.gui;
 
-import com.mitchellbdunn.chip8.system.Screen;
 import com.mitchellbdunn.chip8.Chip8;
+import com.mitchellbdunn.chip8.listeners.ColorChangeListener;
+import com.mitchellbdunn.chip8.listeners.ScreenSizeListener;
+import com.mitchellbdunn.chip8.system.Screen;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -73,8 +75,8 @@ public class OptionsMenu extends JMenu {
         
         // Set up action listeners as well as add the menu items
         // to the menu
-        ActionListener screenSizeListener = new ScreenSizeListener();
-        ActionListener colorChangeListener = new ColorChangeListener();
+        ActionListener screenSizeListener = new ScreenSizeListener(this, screen, panel);
+        ActionListener colorChangeListener = new ColorChangeListener(this, screen);
         screenSize4.addActionListener(screenSizeListener);
         screenSizeMenu.add(screenSize4);
         screenSize5.addActionListener(screenSizeListener);
@@ -96,66 +98,48 @@ public class OptionsMenu extends JMenu {
         this.add(backgroundColor);
         this.add(foregroundColor);
     }
+
+    public JMenuItem getScreenSize4() {
+        return screenSize4;
+    }
+
+    public JMenuItem getScreenSize5() {
+        return screenSize5;
+    }
+
+    public JMenuItem getScreenSize6() {
+        return screenSize6;
+    }
+
+    public JMenuItem getScreenSize7() {
+        return screenSize7;
+    }
+
+    public JMenuItem getScreenSize8() {
+        return screenSize8;
+    }
+
+    public JMenuItem getScreenSize9() {
+        return screenSize9;
+    }
+
+    public JMenuItem getScreenSize10() {
+        return screenSize10;
+    }
+
+    public JMenuItem getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public JMenuItem getForegroundColor() {
+        return foregroundColor;
+    }
     
     public int getScreenMultiplier() {
         return screenMultiplier;
     }
     
-    private class ScreenSizeListener implements ActionListener {
-        public void actionPerformed(ActionEvent ae) {
-            // Get the source of the action
-            JRadioButtonMenuItem source = (JRadioButtonMenuItem) ae.getSource();
-            // Get the text representing the name of the source
-            String menuItemName = source.getText();
-            // Set all radio buttons to unselected
-            screenSize4.setSelected(false);
-            screenSize5.setSelected(false);
-            screenSize6.setSelected(false);
-            screenSize7.setSelected(false);
-            screenSize8.setSelected(false);
-            screenSize9.setSelected(false);
-            screenSize10.setSelected(false);
-            // Set the source radio button to selected
-            source.setSelected(true);
-            // Get the screen multiplier from the menu item name, this way we can
-            // set one action listener for all 10 menu items, rather than one action
-            // listeners for each menu item.  We take the first number and divide it
-            // 64 (the default pixel width of the chip8) so we can get the multiplier.
-            // For example, the first option is 256x128, so in this case it would come
-            // out to be 4.
-            screenMultiplier = Integer.parseInt(menuItemName.split("x")[0]) / 64;
-            screen.setScreenMultipler(screenMultiplier);
-            panel.setPreferredSize(new Dimension(Chip8.SCREEN_WIDTH * screenMultiplier,
-                Chip8.SCREEN_HEIGHT * screenMultiplier));
-            ((JFrame) OptionsMenu.this.getTopLevelAncestor()).pack();
-        }
-    }
-    
-    private class ColorChangeListener implements ActionListener {
-        public void actionPerformed(ActionEvent ae) {
-            // Get the source of the action
-            JMenuItem source = (JMenuItem) ae.getSource();
-            // Get the text representing the name of the source
-            String menuItemName = source.getText();
-            // Create a color chooser
-            JColorChooser colorChooser = new JColorChooser();
-            // Make a color chooser with only swatches
-            AbstractColorChooserPanel[] panels = colorChooser.getChooserPanels();
-            colorChooser.removeChooserPanel(panels[1]);
-            colorChooser.removeChooserPanel(panels[2]);
-            colorChooser.removeChooserPanel(panels[3]);
-            colorChooser.removeChooserPanel(panels[4]);
-            // Remove preview panel
-            colorChooser.setPreviewPanel(new JPanel());
-            JDialog dialog = JColorChooser.createDialog(OptionsMenu.this, "Choose Color", true, colorChooser, null, null);
-            dialog.setVisible(true);
-            Color color = colorChooser.getColor();
-            if(menuItemName.contains("Background")) {
-                screen.setBackgroundColor(color);
-            } else if(menuItemName.contains("Foreground")) {
-                screen.setForegroundColor(color);
-            }
-            panel.repaint();
-        }
+    public void setScreenMultiplier(int screenMultiplier) {
+        this.screenMultiplier = screenMultiplier;
     }
 }
