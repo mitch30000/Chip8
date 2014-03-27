@@ -1,10 +1,10 @@
 package com.mitchellbdunn.chip8;
 
-import com.mitchellbdunn.chip8.gui.Frame;
-import com.mitchellbdunn.chip8.system.Screen;
-import com.mitchellbdunn.chip8.system.Memory;
-import com.mitchellbdunn.chip8.system.Keyboard;
-import com.mitchellbdunn.chip8.system.Cpu;
+import com.mitchellbdunn.chip8.view.Frame;
+import com.mitchellbdunn.chip8.model.Screen;
+import com.mitchellbdunn.chip8.model.Memory;
+import com.mitchellbdunn.chip8.model.Keyboard;
+import com.mitchellbdunn.chip8.model.Cpu;
 import java.awt.Color;
 import javax.swing.SwingUtilities;
 
